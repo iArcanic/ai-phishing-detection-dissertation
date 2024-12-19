@@ -1,1 +1,1 @@
-# ai-phishing-detection-dissertation
+# AI Phishing Detection Dissertation
