@@ -1,2 +1,16 @@
 # MacOS temp files
 .DS_Store
+
+# LaTeX auxiliary files
+*.aux
+*.lof
+*.lot
+*.toc
+*.bbl
+*.bcf
+*.blg
+*.xml
+*.out
+*.log
+*.gz
+*.synctex.gz
