@@ -1,4 +1,4 @@
-name: Dissertation LaTeX PDF Build
+name: LateX to PDF
 
 on:
   push:
@@ -6,27 +6,23 @@ on:
       - main
 
 jobs:
-  build:
-    name: Dissertation LaTeX PDF Build
+  build_latex:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up Git repository
+        uses: actions/checkout@v2
 
-      - name: Set up LaTeX environment
-        run: sudo apt-get update && sudo apt-get install -y texlive-full
-
-      - name: Build PDF
-        working-directory: ./report
-        run: |
-          pdflatex -interaction=nonstopmode report.tex
-          biber report
-          pdflatex -interaction=nonstopmode report.tex
-          pdflatex -interaction=nonstopmode report.tex
-
-      - name: Upload PDF Artifact
-        uses: actions/upload-artifact@v4
+      - name: latex2pdf
+        id: compile-latex-document
+        uses: thomas-chauvet/latex2pdf-action@1.0.5
         with:
-          name: dissertation-artifact
-          path: report/report.pdf
+          output_dir: output
+          main_latex_file: report/report.tex
+          ctan_packages: amsmath amsfonts lua-uni-algos
+
+      - name: Upload PDF to the workflow tab
+        id: upload-workflow-tab
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output/test.pdf
