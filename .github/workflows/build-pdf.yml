@@ -18,12 +18,12 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y texlive-full
 
       - name: Build PDF
-      working-directory: ./report
-      run: |
-        pdflatex -interaction=nonstopmode report.tex
-        biber report
-        pdflatex -interaction=nonstopmode report.tex
-        pdflatex -interaction=nonstopmode report.tex
+        working-directory: ./report
+        run: |
+          pdflatex -interaction=nonstopmode report.tex
+          biber report
+          pdflatex -interaction=nonstopmode report.tex
+          pdflatex -interaction=nonstopmode report.tex
 
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
