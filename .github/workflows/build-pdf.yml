@@ -12,13 +12,19 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
 
+      - name: Clean Auxiliary Files
+        run: rm -f report/*.aux report/*.log report/*.toc report/*.lof report/*.lot report/*.out report/*.bbl report/*.bcf report/*.blg report/*.xml
+
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           root_file: report/report.tex
 
+      - name: Debug File Locations
+        run: ls -lR report
+
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
         with:
           name: report
-          path: report.pdf
+          path: report/report.pdf
