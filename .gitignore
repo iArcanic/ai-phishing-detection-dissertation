@@ -14,3 +14,7 @@
 *.log
 *.gz
 *.synctex.gz
+*.pdf
+*.loa
+*.fls
+*.fdb_latexmk

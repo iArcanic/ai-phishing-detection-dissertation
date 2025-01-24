@@ -1,2 +1,53 @@
 \section{Introduction}
 \label{sec:Introduction}
+
+\subsection*{Background}
+It is deemed that phishing attacks are one of the most common forms of cyber crimes today, with its targets ranging from individuals to large-scale organisations, with the aim of obtaining sensitive information including personal identification, credentials, and financial data. Acording to the DataBreach Report by \cite{verizon2023}, it was investigated that social engineering was responsible for over 50\% of all breaches -- a significant point to consider for cybersecurity. The attacks mainly use complex social engineering techniques such as deceptive content, malicious URLs posing as legitimate, and impersonation, all in an attempt to bypass traditional security systems \citep{marett2009effectiveness}. \newline
+
+\noindent Therefore, Artificial intelligence (AI) and machine learning (ML) can serve as effective tools in detecting phishing attempts. Models can be trained on huge datasets on features like suspicious email headers, text anomalies, and malicious links, which humans have a high probability of missing (\cite{chandrasekaran2006phoney}; \cite{jain2022survey}). However, it is important to note that most traditional AI-phishing detection systems function as a "black-box" model, and they don't offer much transparency into their decision-making processes. Since there is little to no interpretability, it not only reduces trust on the user's side, but the risk that these systems carry inhibit it from being implemented in high-stakes environments such as financial institutions and governmental agencies \citep{ribeiro2016model}. \newline
+
+\noindent Explainable AI (XAI) solve this challenge by attempting to make AI systems more understandable and transparent. Techniques like SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) can give insights into the prediction process models undergo (\cite{lundberg2017unified}; \cite{ribeiro2016model}). Especially for phishing detection, XAI can very much empower a user's confidence in understanding why an email is flagged, due to either language cues, suspicious links, or email metadata. \newline
+
+\noindent However despite advances in AI and XAI, there still remain gaps into integrating explainability into phishing detection models. Many existing approaches have a prioritisation on accuracy, without much thought for comprehensability \citep{hernandes2021phishing}. This means its difficult to strike a balance between performance and transparency. This project therefore addresses to seek this gap, by developing an XAI-enhanced phishing detection system that achieves a high accuracy whilst providing actionable explanations behind its predictions.
+
+\subsection*{Objectives}
+\begin{enumerate}
+    \item Conduct a comprehensive review of existing AI phishing detection models.
+        \begin{itemize}
+            \item Review existing AI phishing detection systems.
+            \item Identify research gaps to address in relation to interpretability in phishing detection.
+            \item Explore XAI techniques, like SHAP and LIME, and their applicability for phishing detection
+        \end{itemize}
+    \item Identify and implement suitable XAI techniques (e.g., SHAP, LIME).
+        \begin{itemize}
+            \item Develop upon a traditional model already being used for phishing detection, e.g. Random Forest or Transformer-based models.
+            \item Integrate XAI techniques into these models that can explain the model predictions.
+            \item Achieve a competetive accuracy that is either on par or better than existing phishing models.
+        \end{itemize}
+    \item Evaluate the system\textquotesingle s performance in terms of accuracy and interpretability.
+        \begin{itemize}
+            \item Assess system on performance metrics such as precision, accuracy, and recall.
+            \item Analyse how useful explanations are using standard interpretability metrics.
+        \end{itemize}
+    \item Compare the usability of the XAI model with traditional black-box models.
+        \begin{itemize}
+            \item Conduct small-scale user studies or surveys to determine how effective XAI influences usability and trust -- compared to black-box models.
+            \item Discuss whether its worth compromising on accuracy to achieve trust and usability.
+        \end{itemize}
+\end{enumerate}
+
+\subsection*{Research question}
+
+\begin{enumerate}
+    \item \textbf{Primary research question:}
+        \begin{itemize}
+            \item \textit{How can Explainable AI (XAI) improve the usability and trustworthiness of phishing detection systems without compromising accuracy?}
+        \end{itemize}
+    \item \textbf{Sub-questions:}
+        \begin{itemize}
+            \item What are the current limitations of AI phishing detection models in terms of their usability and interpretability?
+            \item How do the explainability features affect a user's trust building and decision-making processes?
+            \item How can XAI techniques, i.e. SHAP and LIME, be integrated efficiently on top of existing AI phishing detection models?
+            \item What trade-offs, if any, arise between the performance and interpretability of the AI phishing detection model?
+        \end{itemize}
+\end{enumerate}

@@ -13,6 +13,11 @@
 \usepackage{tabularx}
 \usepackage{appendix}
 \usepackage[hidelinks]{hyperref}
+\usepackage{pdfpages}
+\usepackage[round]{natbib}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{longtable}
+\usepackage{caption}
 
 % Fancy header/footer
 \fancyhf{}
@@ -24,18 +29,27 @@
 \begin{document}
 
 \input{preamble/frontpage}
+\newpage
 \input{preamble/abstract}
-\input{preamble/acknowledgements}
-\input{preamble/abbreviations}
+\newpage
+% \input{preamble/acknowledgements}
+% \newpage
+% \input{preamble/abbreviations}
+% \newpage
 \input{preamble/contents}
-\input{preamble/lists}
-\input{preamble/chapter-mods}
+\newpage
+% \input{preamble/lists}
+% \newpage
+% \input{preamble/chapter-mods}
+% \newpage
 
 \input{chapters/1/1}
-\input{chapters/2/2}
+% \input{chapters/2/2}
+\newpage
 
-\bibliographystyle{abbrv}
+\bibliographystyle{agsm}
 \bibliography{bibliography}
+\newpage
 
 \input{appendices/appendices}
 
