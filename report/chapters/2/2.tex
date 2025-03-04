@@ -3,7 +3,7 @@
 \subsection*{Introduction}
 Phishing attacks remain one of the most prominent attack methods faced by cybersecurity, meaning AI-based detection measures become increasingly essential given that attackers are continiously refining their techniques in attempts to bypass traditional detection systems. AI-driven phishing detection systems offer promise, leveraging the power of machine learning (ML) and deep learning models with the task of classifying emails as either legitimate or phishing. It is important to note that interpreting these AI models is still difficult, making it challenging to trust in decisions they make, raising concerns about trust, regulatory compliance, and model robustness in settings such as finance and healthcare, where the decision-making processes must be auditable and explainable.\newline
 
-\noindent Explainable AI (XAI) is a means to address these interpretability challenges with AI phishing detection. Techniques like SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) can disect the model's decisions, with the aim of helping users understand why a particular email is considered as phishing. However, research on applying XAI techniques to supplement phishing detection systems is currently limited, with most studies prioritising accuracy rather than interpretability.\newline
+\noindent Explainable AI (XAI) is a means to address these interpretability challenges with AI phishing detection. Techniques like SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) can disect the model's decisions, with the aim of helping users understand why a particular email is considered as phishing \citep{lundberg2017unified}. However, research on applying XAI techniques to supplement phishing detection systems is currently limited, with most studies prioritising accuracy rather than interpretability.\newline
 
 \noindent This literature review therefore explores any existing AI phishing detection techniques, their current limitations, and how XAI can be implemented to improve transparency and confidence in these systems, suitable for a real-time environment. In addition, key research gaps are identified, such as the trade-offs between model accuracy and interpretability. It sets the stage for subsequent the development of an XAI-enhanced phishing detection model.
 
@@ -13,6 +13,7 @@ This section starts with providing an overview into how AI and ML are utilised i
 \subsubsection*{Traditional ML approaches}
 Traditional phushing detection models use regular ML algorithms that are trained on a large dataset consisting of both legitimate and phishing emails. To dive deeper, these models are trained on email headers, embedded email URLs, sender information, and message content. Extracting predefined features and feeding them into statistical-based classifiers to differentiate between email types \citep{chandrasekaran2006phoney}.
 
+\paragraph{Common ML algorithms for phishing detection}
 \begin{itemize}
     \item \textbf{Logistic Regression (LR)}
     \begin{itemize}
@@ -40,9 +41,36 @@ Traditional phushing detection models use regular ML algorithms that are trained
     \end{itemize}
 \end{itemize}
 
-Traditional ML approaches are quite limited. They require manual feature selection from the dataset, for example patterns in phishing URLs or domain reputation. They are also hard to adapt when detecting any new phishing attacks encountered. On more complex data, it exhibits lower accuracy, especially phishing emails that utilise social engineering methods.
+\paragraph{Limitations of traditional ML approaches}
+\noindent Traditional ML approaches are quite limited. They require manual feature selection from the dataset, for example patterns in phishing URLs or domain reputation. They are also hard to adapt when detecting any new phishing attacks encountered. On more complex data, it exhibits lower accuracy, especially phishing emails that utilise social engineering methods.
 
 \subsubsection*{Deep learning and NLP approaches}
+Limitations of traditional, feature-based ML models for phishing detection can be overcome with deep learning (DL) and Natural Language Processing (NLP) techniques. These models themselves learn patterns in email text, links and metadata without manual feature selection.
+
+\paragraph{Common deep learning and NLP-based approaches}
+\begin{itemize}
+    \item \textbf{Recurrent Neural Networks (RNNs) \& Long Short-Term Memory (LSTMs)}
+    \begin{itemize}
+        \item Used for analysing email text to detect intent of phishing, e.g. urgency such as "immediate action required" or "your account is compromised".
+        \item Mainly effective for textual patterns.
+        \item Training process is very slow, and it struggles with longer texts.
+    \end{itemize}
+    \item \textbf{Convolutional Neural Networks (CNNs)}
+    \begin{itemize}
+        \item Suitable for phishing URL classification and visual phishing attacks (i.e. images and/or fake websites).
+        \item Works very well for image-based phishing detections.
+        \item Performance declines for textual analysis.
+    \end{itemize}
+    \item \textbf{Transformer-based models (BERT, RoBERTa, GPT)}
+    \begin{itemize}
+        \item Pre-trained NLP models, such as BERT (Bidirectional Encoder Representations from Transformers) use semantic means to classify phishing emails, e.g. PhishBERT, a fine-tuned AI model speficially for phishing detection, outperforming traditional NLP solutions.
+        \item Boasts a very high accuracy.
+        \item It is very hard to interpret and computationally expensive.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Limitations of deep learning approaches}
+\noindent Most deep learning models are black-boxed, meaning it is hard for humans to understand. Not to mention, they require significant resources to be trained and tested. Attackers can also find ways to bypass these models via adversarial attacks, as it is susceptible to email content that is intentionally altered to evade detection.
 
 \subsubsection*{Hybrid models and ensemble learning}
 
