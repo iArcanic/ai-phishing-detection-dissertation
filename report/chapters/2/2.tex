@@ -102,14 +102,32 @@ AI-based phishing detection systems have evolved from just traditional ML models
 \newpage
 
 \subsection*{Limitations of current AI-based approaches}
+Although AI-driven phishing detections solutions have greatly improved cybersecurity efforts, but the models used also suffer from many limitations that make it hard to deploy them in real-world settings. Some of these challenges have been briefly explored in the previous section, but these include the black-boxed nature of some models (deep learning in particular), high false positive and negative rates, limitations of the dataset, and vulnerability to semantic-based attacks. This section delves into more detail on these issues.
 
 \subsubsection*{Black-box nature of AI models}
+A large proportion of existing AI phishing detection models, specifically deep learning-based systems, are black-boxed, meaning that their decision making processes are obscured from the user. This is problematic for long-term system usage as interpretability isn't taken into much consideration, and affects:
+
+\begin{itemize}
+    \item Users and security analysts, as they cannot establish why an email is flagged as phishing.
+    \item Regulatory frameworks, such as GDPR, need AI decisions to be interpretable.
+    \item AI models need to be trustworthy if organisations need to justify results made by AI.
+\end{itemize}
+
+Taking the transformer-based models (e.g. BERT, RoBERTa) as an example, they make predictions based on millions of parameters regardless of their high accuracy. It is therefore difficult to decide which features were responsible for the final classification decision.
+
+An exemplar scenario can be considered. A security team using a deep learning phishing detection model, achieving 95\% accuracy without much reasoning. It's tough to determine whether the decision-making processes were biased by actual revelvant security features or external noise.
+
+This is important as the inability to understand AI decisions inhibit it from being implemented in sensitive sectors -- financial, healthcare, and legal -- where explainability is part of a compliance requirement (\textit{Regulation EU 2016/679}).
 
 \subsubsection*{Accuracy vs. explainability trade-off}
 
 \subsubsection*{False positives and false negatives}
 
 \subsubsection*{Dataset challenges}
+
+\subsubsection*{Adversarial attack vulerabilities}
+
+\subsubsection*{Summary}
 
 \newpage
 
