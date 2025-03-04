@@ -42,7 +42,7 @@ Traditional phushing detection models use regular ML algorithms that are trained
 \end{itemize}
 
 \paragraph{Limitations of traditional ML approaches}
-\noindent Traditional ML approaches are quite limited. They require manual feature selection from the dataset, for example patterns in phishing URLs or domain reputation. They are also hard to adapt when detecting any new phishing attacks encountered. On more complex data, it exhibits lower accuracy, especially phishing emails that utilise social engineering methods.
+Traditional ML approaches are quite limited. They require manual feature selection from the dataset, for example patterns in phishing URLs or domain reputation. They are also hard to adapt when detecting any new phishing attacks encountered. On more complex data, it exhibits lower accuracy, especially phishing emails that utilise social engineering methods.
 
 \subsubsection*{Deep learning and NLP approaches}
 Limitations of traditional, feature-based ML models for phishing detection can be overcome with deep learning (DL) and Natural Language Processing (NLP) techniques. These models themselves learn patterns in email text, links and metadata without manual feature selection.
@@ -70,9 +70,27 @@ Limitations of traditional, feature-based ML models for phishing detection can b
 \end{itemize}
 
 \paragraph{Limitations of deep learning approaches}
-\noindent Most deep learning models are black-boxed, meaning it is hard for humans to understand. Not to mention, they require significant resources to be trained and tested. Attackers can also find ways to bypass these models via adversarial attacks, as it is susceptible to email content that is intentionally altered to evade detection.
+Most deep learning models are black-boxed, meaning it is hard for humans to understand. Not to mention, they require significant resources to be trained and tested. Attackers can also find ways to bypass these models via adversarial attacks, as it is susceptible to email content that is intentionally altered to evade detection.
 
 \subsubsection*{Hybrid models and ensemble learning}
+Researchers have proposed a combination of the aforementioned approaches in the form of hybrid models, that take into account both traditional and deep learning implementations.
+
+\paragraph{Hybrid approach examples}
+\begin{itemize}
+    \item \textbf{ML and NLP models}
+    \begin{itemize}
+        \item ML models such as SVM and Random Forest can be combined with TF-IDF (Term Frequency-Inverse Document Frequency) for feature extraction.
+    \end{itemize}
+    \item \textbf{Ensemble learning}
+    \begin{itemize}
+        \item Multiple classifiers (both ML and DL) are used and their predictions are accumulated for an improved accuracy, e.g. majority voting ensemble.
+        \item Results in a higher accuracy then just singular models.
+        \item Complex to interpret and harder to deploy practically.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Limitations of hybrid models}
+There is a clear trade-off between performance and complexity. The more complex the model, the better the performance and as a result, the requirement for more resources. Additionally, the layers of complexity make it harder to interpret.
 
 \subsection*{Limitations of current AI-based approaches}
 
