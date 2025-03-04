@@ -1,15 +1,46 @@
 \section{Literature review}
 
 \subsection*{Introduction}
-Phishing attacks remain one of the most prominent attack methods faced by cybersecurity, meaning AI-based detection measures become increasingly essential given that attackers are continiously refining their techniques in attempts to bypass traditional detection systems. AI-driven phishing detection systems offer promise, leveraging the power of machine learning (ML) and deep learning models with the task of classifying emails as either legitimate or phishing. It is important to note that interpreting these AI models is still difficult, making it challenging to trust in decisions they make, raising concerns about trust, regulatory compliance, and model robustness in settings such as finance and healthcare, where the decision-making processes must be auditable and explainable.
+Phishing attacks remain one of the most prominent attack methods faced by cybersecurity, meaning AI-based detection measures become increasingly essential given that attackers are continiously refining their techniques in attempts to bypass traditional detection systems. AI-driven phishing detection systems offer promise, leveraging the power of machine learning (ML) and deep learning models with the task of classifying emails as either legitimate or phishing. It is important to note that interpreting these AI models is still difficult, making it challenging to trust in decisions they make, raising concerns about trust, regulatory compliance, and model robustness in settings such as finance and healthcare, where the decision-making processes must be auditable and explainable.\newline
 
-\noindent Explainable AI (XAI) is a means to address these interpretability challenges with AI phishing detection. Techniques like SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) can disect the model's decisions, with the aim of helping users understand why a particular email is considered as phishing. However, research on applying XAI techniques to supplement phishing detection systems is currently limited, with most studies prioritising accuracy rather than interpretability.
+\noindent Explainable AI (XAI) is a means to address these interpretability challenges with AI phishing detection. Techniques like SHAP (SHapley Additive Explanations) and LIME (Local Interpretable Model-agnostic Explanations) can disect the model's decisions, with the aim of helping users understand why a particular email is considered as phishing. However, research on applying XAI techniques to supplement phishing detection systems is currently limited, with most studies prioritising accuracy rather than interpretability.\newline
 
 \noindent This literature review therefore explores any existing AI phishing detection techniques, their current limitations, and how XAI can be implemented to improve transparency and confidence in these systems, suitable for a real-time environment. In addition, key research gaps are identified, such as the trade-offs between model accuracy and interpretability. It sets the stage for subsequent the development of an XAI-enhanced phishing detection model.
 
 \subsection*{AI-based phishing detection approaches}
+This section starts with providing an overview into how AI and ML are utilised in detecting phishing attacks. In essence, whilst traditional rule-based approaches are effective for phishing emails with static patterns, they struggle to keep up with adaptable attacks. This naturally gives rise into exploring with combination of ML, deep learning, and hybrid models to improve detection accuracy.
 
-\subsubsection*{Traditional machine learning approaches}
+\subsubsection*{Traditional ML approaches}
+Traditional phushing detection models use regular ML algorithms that are trained on a large dataset consisting of both legitimate and phishing emails. To dive deeper, these models are trained on email headers, embedded email URLs, sender information, and message content. Extracting predefined features and feeding them into statistical-based classifiers to differentiate between email types \citep{chandrasekaran2006phoney}.
+
+\begin{itemize}
+    \item \textbf{Logistic Regression (LR)}
+    \begin{itemize}
+        \item A very simple ML classifier, mapping linear relationships to determine phishing likelihood depending upon weighted feature importance.
+        \item It is simple to implement, being fast yet also interpretable.
+        \item However, it can only linearly seperate data.
+    \end{itemize}
+    \item \textbf{Decision Trees (DT)}
+    \begin{itemize}
+        \item Classifies emails based on a set of rules that follow a hierarachy, i.e. if the email contains a suspicious URL, clasify it as phishing.
+        \item Human-readable rules can be defined, making it interpretable.
+        \item It is limited by its liability to overfitting.
+    \end{itemize}
+    \item \textbf{Random Forest (RF)}
+    \begin{itemize}
+        \item A combination of multiple decision trees to refine classification accuracy.
+        \item More accurate than just a singular decision tree, and handles data with large noise.
+        \item More difficult to understand than individual decision trees.
+    \end{itemize}
+    \item \textbf{Support Vector Machines (SVMs)}
+    \begin{itemize}
+        \item Finding an optimised decision boundary (or hyperplane) between phishing and legitimate emails.
+        \item It works well in high-dimensional spaces.
+        \item Struggles with large datasets due to its demand for computational resources.
+    \end{itemize}
+\end{itemize}
+
+Traditional ML approaches are quite limited. They require manual feature selection from the dataset, for example patterns in phishing URLs or domain reputation. They are also hard to adapt when detecting any new phishing attacks encountered. On more complex data, it exhibits lower accuracy, especially phishing emails that utilise social engineering methods.
 
 \subsubsection*{Deep learning and NLP approaches}
 
