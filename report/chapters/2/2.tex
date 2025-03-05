@@ -113,13 +113,18 @@ A large proportion of existing AI phishing detection models, specifically deep l
     \item AI models need to be trustworthy if organisations need to justify results made by AI.
 \end{itemize}
 
-Taking the transformer-based models (e.g. BERT, RoBERTa) as an example, they make predictions based on millions of parameters regardless of their high accuracy. It is therefore difficult to decide which features were responsible for the final classification decision.
+\noindent Taking the transformer-based models (e.g. BERT, RoBERTa) as an example, they make predictions based on millions of parameters regardless of their high accuracy. It is therefore difficult to decide which features were responsible for the final classification decision.\newline
 
-An exemplar scenario can be considered. A security team using a deep learning phishing detection model, achieving 95\% accuracy without much reasoning. It's tough to determine whether the decision-making processes were biased by actual revelvant security features or external noise.
+\noindent An exemplar scenario can be considered. A security team using a deep learning phishing detection model, achieving 95\% accuracy without much reasoning. It's tough to determine whether the decision-making processes were biased by actual revelvant security features or external noise.\newline
 
-This is important as the inability to understand AI decisions inhibit it from being implemented in sensitive sectors -- financial, healthcare, and legal -- where explainability is part of a compliance requirement (\textit{Regulation EU 2016/679}).
+\noindent This is important as the inability to understand AI decisions inhibit it from being implemented in sensitive sectors -- financial, healthcare, and legal -- where explainability is part of a compliance requirement (\textit{Regulation EU 2016/679}).
 
 \subsubsection*{Accuracy vs. explainability trade-off}
+There is a clear trade-off between accuracy and explainability in phishing detection models. Highly accurate models taper off in their interpretability, but on the other hand, more interpretable models suffer in accuracy. The challenge here is striking a balance and achieving a model that is both reasonable in its accuracy and interpretability.\newline
+
+\noindent For example, a BERT model with a 98\% accuracy but is completely black-boxed. A random forest model with a 90\% accuracy is less black-boxed and it moderately interpretable. Finally, a decision tree model has the least accuracy with 85\% but is the most interpretable. This is an example of the relationship between better performance compared with interpretability.\newline
+
+\noindent Again, organisations may hesitate to deploy AI models if decisions cannot be verified with proper evidence. In some cases even, a more interpretable model with less accuracy is preferable in high-risk sectors to inspire user confidence.
 
 \subsubsection*{False positives and false negatives}
 
