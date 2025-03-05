@@ -173,22 +173,74 @@ It can be commonly agreed that AI significantly improves phishing detection, how
 \newpage
 
 \subsection*{Introduction to Explainable AI (XAI)}
+Previous sections discussed how most AI-based phishing detection models are often black-boxed systems -- their decision making processes are hard to interpret and understand. This lack of transparency makes it difficult for security analysts to validate a model's predictions, and asosciated issues about trust and regulatory compliance are raised. This is where Explainable AI (XAI) can work to meet these concerns by providing perspective into an emails classification as either phishing or legitimate.\newline
+
+\noindent This section therefore dives into what XAI is, its importance in phishing detection, and existing XAI techniques that can be integrated to improve AI phishing classfiers.
 
 \subsubsection*{What is Explainable AI?}
+When discussing XAI, it refers to the different methods and techniques that allow for decisions made by AI models to be understandable to humans. Dissimilar to typical black-boxed AI models, XAI gives results that have human-readable justifications for its processes.
 
-\subsubsection*{Why is XAI important in phishing detection?}
+\paragraph{Key goals of XAI}
+\begin{itemize}
+    \item \textbf{Transparency}
+    \begin{itemize}
+        \item Insight into how AI models make decisions and come to a final result.
+    \end{itemize}
+    \item \textbf{Trustworthiness}
+    \begin{itemize}
+        \item Give the user more confidence in AI-generated outcomes.
+    \end{itemize}
+    \item \textbf{Regulatory compliance}
+    \begin{itemize}
+        \item AI decisions should align with regulatory frameworks such as GDPR (General Data Protection Regulation) and any other organisation-specific compliance.
+    \end{itemize}
+    \item \textbf{Debugging and bias detection}
+    \begin{itemize}
+        \item The explainability can aid in identifying errors and any skew in the decision making flow.
+    \end{itemize}
+\end{itemize}
 
-\newpage
+\paragraph{Types of AI model explainability}
+Explainability can fall into these two categories:
 
-\subsection*{XAI techniques in phishing detection}
+\begin{enumerate}
+    \item \textbf{Global explainability}
+    \begin{itemize}
+        \item Give an overview into how the entire model functions.
+        \item E.g. the importance of feature analysis in detection systems using the random forest algorithm.
+    \end{itemize}
+    \item \textbf{Local explainability}
+    \begin{itemize}
+        \item Focuses on the individual predictions made by the model rather than the whole.
+        \item E.g. why an email is classed as phishing via SHAP or LIME.
+    \end{itemize}
+\end{enumerate}
 
-\subsubsection*{Model-specific vs. model-agnostic XAI}
+\noindent XAI can help security analysts understand why a phishing email was detected, isolating irrelvant noise and features.
 
-\subsubsection*{SHAP (SHapley Additive Explanations)}
+\subsubsection*{XAI's importance in phishing detection}
+Eventhough it's understood that existing AI-based phishing detection models already achieve a high accuracy rate, they lack interpretability meaning they cannot be implemented in high-risk environments.
 
-\subsubsection*{LIME (Local Interpretable Model-Agnostic Explanations)}
+\paragraph{Key benefits of XAI}
+\begin{enumerate}
+    \item \textbf{Improves model trust and adoption}
+    \begin{itemize}
+        \item 
+    \end{itemize}
+    \item \textbf{Helps security analysts identify false positives and false negatives}
+    \begin{itemize}
+        \item 
+    \end{itemize}
+    \item \textbf{Regulatory compliance (GDPR, AI ethics)}
+    \begin{itemize}
+        \item Certain regulations, such as GDPR (Article 22), require AI decisions to be explainable.
+        \item Organisations that utilise AI systems for email filtering need processes to be transparent and auditable.
+    \end{itemize}
+\end{enumerate}
 
-\subsubsection*{Other XAI approaches}
+\noindent Using an example of a bank. If they were to use an AI-based phishing filter, explanations must be provided as to why certain emails were flagged, specifically if they influence the customer base or company higher-ups (\textit{Regulation EU 2016/679}).
+
+\subsubsection*{XAI techniques in phishing detection}
 
 \newpage
 
