@@ -143,9 +143,16 @@ Any AI-driven systems are prone to generating false positives, i.e. legitimate e
     \item An example might be a phishing email micking a legitimate Microsoft security alert, and detection is bypassed by a small spelling change.
 \end{itemize}
 
-A comparison of multiple phishing detection solutions showed that high-accuracy models can falter in real-world sceenarios. To take a particular example, CNN-based models achieved 96\% accuracy but had a 6\% false negative rate. It goes to show that only a single successful phishing email can result in a major data breach. Security teams must therefore carefully fine-tune AI models to minimise false negatives and have false positives be managable in a practical sense.
+\noindent A comparison of multiple phishing detection solutions showed that high-accuracy models can falter in real-world sceenarios. To take a particular example, CNN-based models achieved 96\% accuracy but had a 6\% false negative rate. It goes to show that only a single successful phishing email can result in a major data breach. Security teams must therefore carefully fine-tune AI models to minimise false negatives and have false positives be managable in a practical sense.
 
 \subsubsection*{Dataset challenges}
+A phishing detection model's accuracy depends largely on the datasets they were trained on, especially the quality and diversity of the data. But this gives rise to many issues.
+
+\paragraph{Lack of real-world phishing samples}
+A lot of existing datasets consist of phishing emails that are outdated and are not reflective of modern techniques. It is common knowledge that attackers contantly evolve, so any models trained on old datasets have a higher chance of failing to detect new methods. This was evident in a 2019 study, which found that a phishing detection model tained on a 2016 dataset has a 30\% lower accuracy when faced with unseen phishing emails utilising new techniques.
+
+\paragraph{Imbalanced datasets}
+Most datasets contain much more legitimate emails when compared to phishing emails, such a 95\%-5\% split. A model can therefore be heavily biased and classify many emails as legitimate -- a high false negative rate. Using techniques such as SMOTE (Synthetic Minority Over Sampling) can lead to a more balanced dataset by generating synthetic samples for lesser classes. Rare phishing patterns can be the focus of some models, i.e. anomaly detection models, rather than strict classification.
 
 \subsubsection*{Adversarial attack vulerabilities}
 
