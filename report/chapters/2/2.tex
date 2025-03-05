@@ -110,7 +110,7 @@ A large proportion of existing AI phishing detection models, specifically deep l
 \begin{itemize}
     \item Users and security analysts, as they cannot establish why an email is flagged as phishing.
     \item Regulatory frameworks, such as GDPR, need AI decisions to be interpretable.
-    \item AI models need to be trustworthy if organisations need to justify results made by AI.
+    \item AI models need to be trustworthy if organisations need to justify results made by these systems.
 \end{itemize}
 
 \noindent Taking the transformer-based models (e.g. BERT, RoBERTa) as an example, they make predictions based on millions of parameters regardless of their high accuracy. It is therefore difficult to decide which features were responsible for the final classification decision.\newline
@@ -152,9 +152,18 @@ A phishing detection model's accuracy depends largely on the datasets they were 
 A lot of existing datasets consist of phishing emails that are outdated and are not reflective of modern techniques. It is common knowledge that attackers contantly evolve, so any models trained on old datasets have a higher chance of failing to detect new methods. This was evident in a 2019 study, which found that a phishing detection model tained on a 2016 dataset has a 30\% lower accuracy when faced with unseen phishing emails utilising new techniques.
 
 \paragraph{Imbalanced datasets}
-Most datasets contain much more legitimate emails when compared to phishing emails, such a 95\%-5\% split. A model can therefore be heavily biased and classify many emails as legitimate -- a high false negative rate. Using techniques such as SMOTE (Synthetic Minority Over Sampling) can lead to a more balanced dataset by generating synthetic samples for lesser classes. Rare phishing patterns can be the focus of some models, i.e. anomaly detection models, rather than strict classification.
+Most datasets contain much more legitimate emails when compared to phishing emails, such a 95\%-5\% split. A model can therefore be heavily biased and classify many emails as legitimate -- a high false negative rate. Using techniques such as SMOTE (Synthetic Minority Over Sampling) can lead to a more balanced dataset by generating synthetic samples for lesser classes. Rare phishing patterns can be the focus of some models, i.e. anomaly detection models, rather than strict classification.\newline
+
+\noindent An AI model, although being highly accurate, if trained on an imbalanced dataset it can skew results and have a profound failure in real-world contexts. For practicality and effictiveness, automated periodic dataset updates should take place alongside real-time deployment.
 
 \subsubsection*{Adversarial attack vulerabilities}
+As mentioned before, AI models are susceptible to carefully crafted phishing emails with the objective of evading detection. This is classed as an adversarial attack.\newline
+
+\noindent Adversarial attacks work by making small modifications to textual components of the phishing email, including URLs, or metadata to circumvent filters proposed by the AI model. For example, homoglyph attacks are commonly used, i.e. using "m\'{i}crosoft.com" instead of "microsoft.com" (note the difference in the letter "i"). It can be showcased by this exemplar study, by which showed that even minor modifications to a phishing email's wording can completely fool deep learning models and hence invoking a false negative.\newline
+
+\noindent There are clear mitigations strategies to address this attack type. Models can specifically be trained on a dataset of purposely manipulated phishing emails, so they can learn how to classifiy these emails accordingly. Furthermore, by using a hybrid AI and rule-based approached accompanied by static phishing indicators can prove to be useful.\newline
+
+\noindent Since phishing attackers are constantly devising new ways to bypass detection systems, it is of utmost importance to continiously make these systems aware on manipulation methods.
 
 \subsubsection*{Summary}
 
