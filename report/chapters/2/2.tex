@@ -127,6 +127,23 @@ There is a clear trade-off between accuracy and explainability in phishing detec
 \noindent Again, organisations may hesitate to deploy AI models if decisions cannot be verified with proper evidence. In some cases even, a more interpretable model with less accuracy is preferable in high-risk sectors to inspire user confidence.
 
 \subsubsection*{False positives and false negatives}
+Any AI-driven systems are prone to generating false positives, i.e. legitimate emails incorrectly flagged as phishing, and false negatives, i.e. phishing emails being classed as legitimate. Each have their own cases.
+
+\paragraph{False positives (FPs) -- legitimate emails flagged as phishing}
+\begin{itemize}
+    \item If important business emails are blocked, it can distrupt typical company operations.
+    \item Security analysts can suffer from alert fatigue, and lead to mistaking phishing emails as legitimate in the long-term.
+    \item An example is an AI model incorrectly flagging a legitimate email from an unfamliar third party verified by the organisation as phishing.
+\end{itemize}
+
+\paragraph{False negatives (FNs) -- phishing emails classed as legitimate}
+\begin{itemize}
+    \item More dangerous as missed phshing emails can potentially lead to security breaches.
+    \item Attacks can exploit this and evade detection by making minor textual changes.
+    \item An example might be a phishing email micking a legitimate Microsoft security alert, and detection is bypassed by a small spelling change.
+\end{itemize}
+
+A comparison of multiple phishing detection solutions showed that high-accuracy models can falter in real-world sceenarios. To take a particular example, CNN-based models achieved 96\% accuracy but had a 6\% false negative rate. It goes to show that only a single successful phishing email can result in a major data breach. Security teams must therefore carefully fine-tune AI models to minimise false negatives and have false positives be managable in a practical sense.
 
 \subsubsection*{Dataset challenges}
 
