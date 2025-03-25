@@ -201,8 +201,6 @@ When discussing XAI, it refers to the different methods and techniques that allo
 \end{itemize}
 
 \paragraph{Types of AI model explainability}
-Explainability can fall into these two categories:
-
 \begin{enumerate}
     \item \textbf{Global explainability}
     \begin{itemize}
@@ -225,11 +223,14 @@ Eventhough it's understood that existing AI-based phishing detection models alre
 \begin{enumerate}
     \item \textbf{Improves model trust and adoption}
     \begin{itemize}
-        \item 
+        \item Before blocking emails, security teams need to verify their AI predictions.
+        \item If an email is flagged as suspicious, XAI can show why and if the decision from the AI model is worth trusting.
     \end{itemize}
     \item \textbf{Helps security analysts identify false positives and false negatives}
     \begin{itemize}
-        \item 
+        \item False positives can cause actual business emails to be blocked.
+        \item False negatives means that phishing emails can bypass detection.
+        \item XAI allows detection thresholds to be fine-tuned.
     \end{itemize}
     \item \textbf{Regulatory compliance (GDPR, AI ethics)}
     \begin{itemize}
@@ -241,8 +242,48 @@ Eventhough it's understood that existing AI-based phishing detection models alre
 \noindent Using an example of a bank. If they were to use an AI-based phishing filter, explanations must be provided as to why certain emails were flagged, specifically if they influence the customer base or company higher-ups (\textit{Regulation EU 2016/679}).
 
 \subsubsection*{XAI techniques in phishing detection}
+There are many XAI techniques to supplement transparency within phishing detection models. Techniques such as SHAP, LIME, and other additional interpretable processes are briefly details.
 
-\newpage
+\paragraph{SHAP (SHapley Additive Explanations)}
+With SHAP, each feature (could be the email subject, sender address, or a URL) is assigned a Shapley value, as measure of its contibution towards the models final decision. It can provide both a global and local interpretation.\newline
+
+\noindent Take the instance of a phishing detection model classifying an email as phishing. SHAP therefore reveals the presence of suspicious indicators, which might be words ("urgent" or "payment required") and perhaps an unknown IP address, that mainly contributed to the final decision.\newline
+
+\noindent SHAP works well to provide explanations that are theoretically evidenced and fits in well with complex models such as deep learning. However, SHAP tends to be computationally expensive and hard for non-technical users to understand decision factors.
+
+\paragraph{LIME (Local Interpretable Model-Agnostic Explanations)}
+LIME intentionally malforms the input data to see how predictions change in real-time. The goal here is to create a simple interpretable model, e.g. with linear regression, to serve as an approximation to complicated AI decisions.\newline
+
+\noindent If for example a classifier flags an email as phishing, LIME would highlight any factors that heavily influenced the final decision, such as a shortened URL or a phrase of urgency.\newline
+
+\noindent The advantage of this is that LIME it model agnnostic, i.e. it works with any AI model algorithm. It is also much faster than SHAP. However, its limitation is that its much less accurate than SHAP and its output of explanations are likely to be unstable -- dependent on the data sampling tactics used.
+
+\paragraph{Attention mechanisms in transformer models}
+Transformer-based models, such as BERT or GPT, use attention measures to determine the words or phrases of importance when making a decision. Attention heatmaps are helpful in showing which parts of an email have the most contribution to a phishing classification.\newline
+
+\noindent For example, a phishing detection model usilising BERT would highlight phrases such as of suspicion in a potential phishing email, such as persuading a user to click on specific links.\newline
+
+\noindent Attention mechanisms can seamlessly integrate with NLP models and performs particularly well for longer email texts, keeping it consistent. But when compared to SHAP and LIME techniques, it falls short and is considered "opaque", i.e. there is still some black boxing.
+
+\paragraph{Feature importance analysis in traditional machine learning}
+For more simpler models like random forest or decision trees, the features importance can be examined to see which of the dataset's features most infleunced the final classification.\newline
+
+\noindent Taking the example of a decision tree classifier, if it shows that "containes shortened URL" as the most important factor, this would be flagged as such.\newline
+
+\noindent The advantages of this is its high interpretability, and works without much computational resources. Although it can work with deep learning models, it is less applicable and therefore not recommended -- suitable for more traditional ML models.
+
+\paragraph{Comparing XAI methods for phishing detection}
+It depends on the use case for whiever method to shine the best.\newline
+
+\noindent Starting with SHAP, its boats high accurace, globally applicable to most models, and has local interpretability. However it is computationally expensive. It is best suited for deep larning models, such as BERT and CNNs. Next, LIME is fast and model independent, however, it is less stable with a higher chance of it giving inconsistent results. But it performs well for quick explanations, particularly in ML and NLP models. Attention mechanisms are already default for NLP models, however, they still lack full transparency. It performs well for transformer models such as BERT and GPT. And finally, feature importance is simple to understand, yet its limited to only traditional machine learning models. It works well with decision trees and random forest based classifiers.
+
+\noindent If there is a requirement for a phishing detection model implemented upon a deep learning algorithm, SHAP would be the best pick. But if fast local explanations are needed instead, LIME serves as the best alternative. If using transformer based models, attention mechanisms is the most optimised here to provide valuable insights.
+
+\subsubsection*{Summary}
+
+\noindent The XAI techniques, SHAP, LIME, attention mechanisms, and feature importance, can all be employed to make AI-based phishing detection models more interpreable for transparency and inspire a sense of confidence in decisions being made. It is worth nothing that current research has not fully captured the trade-offs between interpretability and performance in the context of phishing detection.\newline
+
+\noindent The next section explores the current research gaps in this field, and specifically how this dissertation works in effectively addressing them.
 
 \subsection*{Identified research gaps}
 
