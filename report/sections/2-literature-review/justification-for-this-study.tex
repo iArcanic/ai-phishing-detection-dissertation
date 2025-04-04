@@ -1,2 +1,55 @@
 \subsection*{Justification for this study}
 
+This study systematically addresses the identified research gaps in AI-based phishing detection, as identified in the literature review. Below is detail on how this work will advance in this specific space in alignment with the objectives and research questions presented in \hyperref[sec:1-introduction]{Section 1}.
+
+\subsubsection*{1. Bridging the interpretability-performance divide}
+As explored, existing models have been seen to achieve high accuracies such as 99.7\% in a study by \cite{do2024integrated}. But they are hindered by their black-boxed nature, limiting trust and practical deployability \citep{atlam2022business}. This study directory addresses this gap, Research Gap 1, by:
+
+\begin{itemize}
+  \item Implementing XAI techniques, like SHAP, LIME, EBM, or attention mechanisms, on state-of-the-art models such as transformers or random forests in an attempt to preserve model accuracy (Objective 2).
+  \item The trade-offs between both explainability and performance should be quantified, meeting Sub Research Question 4. There is a need for a balanced solution by \cite{alzahrani2024explainable}.
+\end{itemize}
+
+\subsubsection*{2. Pioneering user-centric XAI evaluation}
+The literature review highlighted the neglect of user's interactions with XAI explanations \citep{vo2024securing}, regardless of evidence into how poor UI warning dialog design can lead to more risk of being tricked by phishing emails \citep{greco2023explaining}. Research Gap 2 is met by:
+
+\begin{itemize}
+  \item Carrying out usability surveys to understand how XAI explanations affect a user's trust and decision-making processes (Objective 4).
+  \item Taking inspiration from \cite{anderson2015polymorphic} to design polymorphic alerts that is specifically tailored to end-user psychology (Sub Research Question 2).
+\end{itemize}
+
+\subsubsection*{3. Establishing standardised XAI metrics}
+As identified, there is a lack of a standardised framework in which to evaluate XAI effectiveness \citep{reddy2023explainable}. The study fulfills Research Gap 3 by:
+
+\begin{itemize}
+  \item Proposing potential metrics in which explanation fidelity, comprehensibility, and fairness can be evluated by (Objective 3).
+  \item Align with \cite{shendkar2024enhancing}'s framework but adapt it to phishing email detection contexts.
+\end{itemize}
+
+\subsubsection*{4. Validating practical feasibility}
+Most studies have seen to ignore real-world limitations like GDPR compliance and means of scalability \citep{kapoor2024comparative}. Research Gap 4 is satisfied by this study via the following, although it isn't a production-ready deployment.
+
+\begin{itemize}
+  \item XAI-powered phishing detection models will be tested under realistic workloads (Sub Research Question 1).
+  \item Overseeing the computational resource requirements of integrating XAI explanations (Research Gap 8).
+\end{itemize}
+
+\subsubsection*{5. Advancing interdisciplinary explanations}
+Current XAI models output explanations that assume that the end-user has adequate technical expertise \citep{greco2023explaining}, with little to no inclusion for non-technical users. This study responds to Research Gap 9 by:
+
+\begin{itemize}
+  \item Modifying explanations to different levels of user roles in usability tests (Objective 4).
+  \item Implementing user feedback loops as a way to refine explanations in an interative manner.
+\end{itemize}
+
+\subsubsection*{Theoretical and practical contributions}
+In summary, this work offers the following:
+
+\begin{itemize}
+  \item \textbf{Theoretical novelty}: A framework for XAI-powered phishing detection model evaluation, addressing research Gaps 1--3.
+  \item \textbf{Practical impact}: A user-tested design, with principles for interpretable phishing alerts, meeting Research Gaps 2 and 9.
+  \item \textbf{Methodological rigor}: Standardised metrics and guidliens for repoducibility, satisfying Research Gap 3.
+\end{itemize}
+
+\noindent The targeted research gaps ensure that he study not only answers its research questions outlined, but served to provide actionable details for industrial deployment. This matches requirements for a deployable yet trustworthy AI-based phishing detection system as called for by \cite{atlam2022business} and \cite{lim2025explicate}.
+
