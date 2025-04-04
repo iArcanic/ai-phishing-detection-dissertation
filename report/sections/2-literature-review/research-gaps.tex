@@ -1,0 +1,54 @@
+\subsection*{Research gaps}
+
+As a result of this literature review, it has underscored several critical gaps in the space of AI-based phishing detection systems -- all which have some direct correlation with this study's objectives and research questions, outlined in \hyperref[sec:1-introduction]{Section 1}.
+
+\begin{enumerate}
+  \item \textbf{Interpretability vs. performance trade-offs in phishing detection systems}
+  \begin{itemize}
+    \item \textbf{Gap}: Higher accuracry models, such as transformers and random forest, often lack many interpretability features. More explainable models like EBM may underperform (\citeauthor{do2024integrated}, \citeyear{do2024integrated}; \citeauthor{greco2023explaining}, \citeyear{greco2023explaining}). There are few studies that find the optimal balance between the two.
+    \item \textbf{Aligned with}: Objective 2 (implement XAI techniques), Sub Research Question 4 (trade-offs between performance and interpretability).
+  \end{itemize}
+  \item \textbf{Lack of a user-centric XAI design}
+  \begin{itemize}
+    \item \textbf{Gap}: Most of the existing XAI-powered systems focus on technical explanations of outputs, such as with SHAP/LIME. They fail to evaluate how users interact with them (\citeauthor{vo2024securing}, \citeyear{vo2024securing}; \citeauthor{anderson2015polymorphic}, \citeyear{anderson2015polymorphic}).
+    \item \textbf{Aligned with}: Objective 4 (usability comparison), Sub Research Question 2 (impact of interpretability on trust).
+  \end{itemize}
+  \item \textbf{Absence of standardised XAI evaluation metrics}  \begin{itemize}
+      \item \textbf{Gap}: There isn't a rigid framework nor a consensus on how to formally assess XAI's effectiveness for phishing detection (\citeauthor{reddy2023explainable}, \citeyear{reddy2023explainable}; \citeauthor{shendkar2024enhancing}, \citeyear{shendkar2024enhancing}).
+    \item \textbf{Aligned with}: Objective 3 (evaluate interpretability metrics).
+  \end{itemize}
+  \item \textbf{Limited real-world validation of XAI phishing detection systems}
+  \begin{itemize}
+    \item \textbf{Gap}: Most studies test models in controlled environments and often ignore real-world limitations such as privacy (GDPR) compliance and scalability means (\citeauthor{kapoor2024comparative}, \citeyear{kapoor2024comparative}; \citeauthor{atlam2022business}, \citeyear{atlam2022business}).
+    \item \textbf{Aligned with}: Sub Research Question 1 (limitations of current models).
+  \end{itemize}
+  \item \textbf{Inadequate integration of XAI with high performing AI models}  \begin{itemize}
+    \item \textbf{Gap}: Whilst its known that SHAP/LIME can be applied to traditional ML models, such as random forest and decision trees, their integration with more complex models like transformers or hybrid architectuers is not substantially explored (\citeauthor{alzahrani2024explainable}, \citeyear{alzahrani2024explainable}; \citeauthor{lim2025explicate}, \citeyear{lim2025explicate}).
+    \item \textbf{Aligned with}: Objective 1 (review existing systems), Objective 2 (implement XAI on advaned models).
+  \end{itemize}
+  \item \textbf{Dynamic adaptability to evolving phishing tactics}
+  \begin{itemize}
+    \item \textbf{Gap}: Studies have AI models trained on static dataset, and as a result, they fail with novel attack vectors, which includes deepfales and context-aware attacks (\citeauthor{kapoor2024comparative}, \citeyear{kapoor2024comparative}; \citeauthor{atlam2022business}, \citeyear{atlam2022business}). There are few studies that take continous training into consideration, along with XAI to explain the adaptations models make.
+    \item \textbf{Aligned with}: Objective 1 (review existing systems), Sub Research Question 1 (limitations of current models).
+  \end{itemize}
+  \item \textbf{Bias and fairness in XAI interpretability explanations}  \begin{itemize}
+      \item \textbf{Gap}: Some studies show that XAI techniques can be influenced from biases in training data, for example flagging emails from specific domains as phishign by default \citep{hanif2021survey}. As of now, there are no studies that account for this bias for phishing-specific XAI outcomes.
+    \item \textbf{Aligned with}: Objective 3 (evaluate interpretability metrics).
+  \end{itemize}
+  \item \textbf{Computational overhead of XAI integration}
+  \begin{itemize}
+    \item \textbf{Gap}: Studies which attempt real-time deployment are often limited by the comutational costs of the inherent model as well as the additional XAI techniques, i.e. SHAP/LIME latency \citep{kapoor2024comparative}. There isn't much numerical analysis on efficiency and speed.
+    \item \textbf{Aligned with}: Research Question 4 (trade-offs between performance and interpretability).
+  \end{itemize}
+  \item \textbf{Interdisciplinary explanations for non-technical users} 
+  \begin{itemize}
+    \item \textbf{Gap}: XAI outputs from models that studies have developed often assume technical expertise of the user \citep{greco2023explaining}. There are no current frameworks that adapt XAI explanations to various user roles, such as from a SOC analyst to an end-user.
+    \item \textbf{Aligned with}: Objective 4 (usability comparison), Sub Research Question 2 (impact of interpretability on trust). 
+  \end{itemize}
+  \item \textbf{Privacy respecting XAI for compliance}
+  \begin{itemize}
+    \item \textbf{Gap}: Since phishing detectors often process sensitive user information extracted from email metadata and content, models have to be privacy respecting. XAI explanations carry the risk of leaking sensitive user data \citep{atlam2022business}. GDPR-compliant XAI implementations are yet to be explored.
+    \item \textbf{Aligned with}: Sub Research Question 1 (limitations of current models).
+  \end{itemize}
+\end{enumerate}
+
