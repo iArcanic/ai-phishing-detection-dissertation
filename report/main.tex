@@ -1,3 +1,5 @@
+% ai-based-phishing-detection-dissertation/report/main.tex
+
 \documentclass[pdftex,10pt,a4paper,oneside]{article}
 
 \usepackage{amsmath}
@@ -18,6 +20,8 @@
 \usepackage[a4paper,margin=1in]{geometry}
 \usepackage{longtable}
 \usepackage{caption}
+\usepackage{pdflscape}
+\usepackage{lscape}
 
 % Fancy header/footer
 \fancyhf{}
@@ -41,10 +45,15 @@
 \newpage
 \input{preamble/lists}
 \newpage
+
+% Page styling
 \input{preamble/chapter-mods}
+\input{preamble/landscape-style}
 \newpage
 
 % Sections
+
+% 1: Introduction
 \section{Introduction}\label{sec:1-introduction}
 \input{sections/1-introduction/background}
 \input{sections/1-introduction/objectives}
@@ -52,35 +61,66 @@
 \input{sections/1-introduction/structure}
 \newpage
 
+% 2: Literature review
 \section{Literature review}\label{sec:2-literature-review}
 \input{sections/2-literature-review/introduction}
-\input{sections/2-literature-review/ai-based-phishing-detection-models}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection}
+
+\subsection*{AI-based phishing detection models}
+\input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
+\input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
+\input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
+\input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
+
+\subsection*{Challenges in AI based phishing detection}
+\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/data-set-and-model-performance-issues}
+\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
+\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/privacy-and-error-trade-offs}
+\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/interpretability-and-xai-challenges}
+\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
+
+\subsection*{XAI in the context of phishing detection}
+\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
+\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
+\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/xai-techniques-and-methodologies}
+\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/practical-implementations-and-case-studies}
+\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/future-directions}
+
+\newpage
+
+\input{sections/2-literature-review/summary-of-existing-phishing-email-detection-techniques}
+\newpage
+
+\input{sections/2-literature-review/summary-of-xai-techniques}
+\newpage
+
 \input{sections/2-literature-review/research-gaps}
 \input{sections/2-literature-review/justification-for-this-study}
 \newpage
 
+% 3: Research methodology
 \section{Research methodology}\label{sec:3-research-methodology}
 \input{sections/3-research-methodology/introduction}
 \newpage
 
+% 4: Results
 \section{Results}\label{sec:4-results}
 \newpage
 
+% 5: Discussion
 \section{Discussion}\label{sec:5-discussion}
 \newpage
 
+% 6: Conclusion
 \section{Conclusion}\label{sec:6-conclusion}
 \newpage
 
-% References
+% 7: References
 \bibliographystyle{agsm}
 \addcontentsline{toc}{section}{References}
 \bibliography{bibliography}
 \newpage
 
-% Appendices
+% 8: Appendices
 \input{appendices/appendices}
 
 \end{document}
