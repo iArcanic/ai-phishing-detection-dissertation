@@ -1,4 +1,48 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/datasets/strengths-and-limitations.tex
 
 \subsubsection*{Strengths and limitations}
+Although each dataset might boast varied features and of substantial sizes, it is important to review their general strengths and weaknesses when considering which one to use.
+
+\begin{itemize}
+  \item \textbf{Enron Phishing Email Dataset}:
+  \begin{itemize}
+    \item \textit{Pros}: Email text is already clean and preprocessed, with structured headers, so its readily available. It also has a large size.
+    \item \textit{Cons}: Quite outdated with 2001-2002 emails, and therefore lacks more modern attacks. Also has limited diversity due to a bias for specific attack types.
+  \end{itemize}
+  \item \textbf{CEAS 2008 Challenge Corpus}:
+  \begin{itemize}
+    \item \textit{Pros}: Comes with labels for spam vs. phishing emails and provides a diverse range.
+    \item \textit{Cons}: However, its dataset size is smaller compared to others, when compared to modern standards, and has a slight preference for certian attack tactics.
+  \end{itemize}
+  \item \textbf{SpamAssassin Public Corpus}:
+  \begin{itemize}
+    \item \textit{Pros}: Data is already well pre-processed, labelled, and easy to access.
+    \item \textit{Cons}: There are limited, specialised phishing email examples to work with due to its size. Some attack tactics are outdated.
+  \end{itemize}
+  \item \textbf{Nazario Spam Dataset}:
+  \begin{itemize}
+    \item \textit{Pros}: Dataset elements are quite focused on phishing emails.
+    \item \textit{Cons}: Due to the year of its release, 2004-2007, it is very outdated in comparison. It also has a limited size.
+  \end{itemize}
+  \item \textbf{PhishTank}:
+  \begin{itemize}
+    \item \textit{Pros}: Real-time, proposing phishing URLs with rich and detailed metadata.
+    \item \textit{Cons}: It lacks any phishing email content whatsoever.
+  \end{itemize}
+  \item \textbf{UNB Phishing Dataset}:
+  \begin{itemize}
+    \item \textit{Pros}: Serves as an academic standard since it was published by a university.
+    \item \textit{Cons}: But it is a static snapshot of phishing emails with no live updating features.
+  \end{itemize}
+  \item \textbf{Nigerian Fraud Dataset}:
+  \begin{itemize}
+    \item \textit{Pros}: Focuses mainly on the differnt social engineering tactics phishing emails use.
+    \item \textit{Cons}: This impacts its scope, and its not general and is specialised to a niche. It's limited size is not preferable for general phishing emails.
+  \end{itemize}
+  \item \textbf{Ling-Spam Corpus}:
+  \begin{itemize}
+    \item \textit{Pros}: Data comes already cleaned and labelled, easily accessible and split into spam and ham emails.
+    \item \textit{Cons}: Has a limited size and attack tactic domain with a focus on mainly linguistics.
+  \end{itemize}
+\end{itemize}
 
