@@ -23,6 +23,7 @@
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{lscape}
+\usepackage[normalem]{ulem}
 
 % Fancy header/footer
 \fancyhf{}
@@ -66,19 +67,22 @@
 \section{Literature review}\label{sec:2-literature-review}
 \input{sections/2-literature-review/introduction}
 
+% AI-based phishing detection models
 \subsection*{AI-based phishing detection models}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
 
-\subsection*{Challenges in AI based phishing detection}
+% Challenges in AI-based phishing detection
+\subsection*{Challenges in AI-based phishing detection}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/data-set-and-model-performance-issues}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/privacy-and-error-trade-offs}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/interpretability-and-xai-challenges}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
 
+% XAI in the context of phishing detection
 \subsection*{XAI in the context of phishing detection}
 \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
 \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
@@ -88,19 +92,69 @@
 
 \newpage
 
-\input{sections/2-literature-review/summary-of-existing-phishing-email-detection-techniques}
+% Research gaps
+\subsection*{Research gaps}
+\input{sections/2-literature-review/research-gaps/introduction}
+\input{sections/2-literature-review/research-gaps/research-gap-1}
+\input{sections/2-literature-review/research-gaps/research-gap-2}
+\input{sections/2-literature-review/research-gaps/research-gap-3}
+\input{sections/2-literature-review/research-gaps/research-gap-4}
+\input{sections/2-literature-review/research-gaps/research-gap-5}
+\input{sections/2-literature-review/research-gaps/research-gap-6}
+\input{sections/2-literature-review/research-gaps/research-gap-7}
+\input{sections/2-literature-review/research-gaps/research-gap-8}
+\input{sections/2-literature-review/research-gaps/research-gap-9}
+\input{sections/2-literature-review/research-gaps/research-gap-10}
+
 \newpage
 
+% Justification for this study
+\subsection*{Justification for this study}
+\input{sections/2-literature-review/justification-for-this-study/introduction}
+\input{sections/2-literature-review/justification-for-this-study/justification-1}
+\input{sections/2-literature-review/justification-for-this-study/justification-2}
+\input{sections/2-literature-review/justification-for-this-study/justification-3}
+\input{sections/2-literature-review/justification-for-this-study/justification-4}
+\input{sections/2-literature-review/justification-for-this-study/justification-5}
+\input{sections/2-literature-review/justification-for-this-study/theoretical-and-practical-contributions}
+
+\newpage
+
+% Summary tables
+\input{sections/2-literature-review/summary-of-existing-phishing-detection-techniques}
+\newpage
 \input{sections/2-literature-review/summary-of-xai-techniques}
-\newpage
 
-\input{sections/2-literature-review/research-gaps}
-\input{sections/2-literature-review/justification-for-this-study}
 \newpage
-
 % 3: Research methodology
 \section{Research methodology}\label{sec:3-research-methodology}
 \input{sections/3-research-methodology/introduction}
+
+% Dataset selection and evaluation
+\subsection*{Datasets}
+\input{sections/3-research-methodology/datasets/sources}
+\input{sections/3-research-methodology/datasets/selection-criteria}
+\input{sections/3-research-methodology/datasets/strengths-and-limitations}
+\input{sections/3-research-methodology/datasets/final-selection-and-justification}
+\newpage
+\input{sections/3-research-methodology/datasets/summary-of-datasets}
+\newpage
+
+% Data preprocessing
+\subsection*{Data preprocessing}
+
+% Model development
+\subsection*{Model development}
+\input{sections/3-research-methodology/model-development/introduction}
+\input{sections/3-research-methodology/model-development/model-selection}
+\input{sections/3-research-methodology/model-development/xai-integration}
+
+% Evaluation framework
+\subsection*{Evaluation framework}
+
+% Implementation tools
+\subsection*{Implementation tools}
+
 \newpage
 
 % 4: Results
@@ -125,3 +179,4 @@
 \input{appendices/appendices}
 
 \end{document}
+
