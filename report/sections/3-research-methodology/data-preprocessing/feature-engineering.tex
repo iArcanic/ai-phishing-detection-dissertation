@@ -1,4 +1,64 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/data-preprocessing/feature-engineering.tex
 
 \subsubsection*{Feature engineering}
+Efficient, purposeful, and thorough feature engineering is important to differentiate between legitimate emails and phishing content. This section takes inspiration from \citep{do2024integrated} and \citep{hamid2013using} with the aim of creating three feature classes -- perfected for model performance and subsequent explainability.
 
+\begin{enumerate}
+  \item \textbf{NLP-based features}
+  \begin{itemize}
+    \item \textit{Embedding vectors}:
+    \begin{itemize}
+      \item 768-dimensional BERT embeddings should be generated via the \texttt{transformers} Python library for email content, with the aim of maintaing a semantic context \citep{shirazi2022towards}.
+      \item This can be supplemented with domain-specific tuning on phishing-specific language structures, e.g. clusters of "urgent action required".
+    \end{itemize}
+    \item \textit{Stylometric features}:
+    \begin{itemize}
+      \item Readability scores, i.e. Flesch-Kincaid, along with urgency metrics via punctuation density \citep{greco2023explaining}.
+      \item Lexicons should be extracted -- Type-Token Ratio (TTR) score for phishing messages would tend to be inherently lower \citep{anderson2015polymorphic}.
+    \end{itemize}
+    \item \textit{Structural features}:
+    \begin{itemize}
+      \item Headers should be analysed, such as the ratio of "Reply-To" to "From" mismatches in addresses. 
+      \item Phishing email attachments are to be analysed to detect the presence of executable extensions (e.g. "\texttt{.exe}" or "\texttt{.js}"), even if they are obfuscated.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{URL-based features}
+  \begin{itemize}
+    \item \textit{Lexical features}:
+    \begin{itemize}
+      \item Check for length, i.e. number of subdomains, path depth, etc.
+      \item Use entropy scores to analyse character distrivution and for suspicious, random domains \citep{palaniappan2020malicious}.
+    \end{itemize}
+    \item \textit{Network features}:
+    \begin{itemize}
+      \item Use WHOIS data to rate domains based on certain rules (e.g. a domain being registered less than 30 days ago), via the \texttt{python-whois} Python library.
+      \item Validate any cerficiates, with those being self-signed increasing the likelihood of the email being suspicious.
+    \end{itemize}
+    \item \textit{Behavioral features}:
+    \begin{itemize}
+      \item Redirect URLs before they reach their final destinations, keeping count of intermediate requests.
+      \item Use API from VirusTotal to query for domain reputation \citep{lin2021phishpedia}.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Temporal metadata features}
+  \begin{itemize}
+    \item \textit{Time-sensitive indicators}:
+    \begin{itemize}
+      \item From email metadata, analyse timestamps for peak phishing times, i.e. 10AM-2PM local time \citep{vishwanath2011people}.
+      \item Compare weekend vs weekday patterns of sending.
+    \end{itemize}
+    \item \textit{Cross-message feature}:
+    \begin{itemize}
+      \item Generate a similarity score that compares scam emails to known phishing templates, such as the Jaccard index on trigrams.
+      \item Detect a sudden increase in messages with similar subjects (burst detection).
+    \end{itemize}
+  \end{itemize}
+\end{enumerate}
+
+\noindent Some additional implementation notes to consider: 
+
+\begin{itemize}
+  \item \textbf{Feature scaling}: Apply Min-Max normalisation for neural networks, but don'y apply scaling for tree-based models (i.e. random forest or decision trees).
+  \item \textbf{Dimensionality}: A total of about 150-200 features after selection.
+  \item \textbf{Reproducibility}: A frozen feature extraction pipeline that is versioned a DVC, like GitHub.
+\end{itemize}
