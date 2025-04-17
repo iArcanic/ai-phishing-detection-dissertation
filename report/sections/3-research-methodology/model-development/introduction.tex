@@ -1,2 +1,19 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/introduction.tex
 
+Taking the preprocessed data that gives a neat, curated feature space, this section will describe the practical design and implementation of an AI phishing detection system that is integrated with XAI explainability methods. Such a setup addresses \hyperref[research-gap-1]{\uline{\textbf{Research Gap 1}}} (performance vs interpretability trade-offs) and \hyperref[research-gap-3]{\uline{\textbf{Research Gap 3}}} (lack of standardised framework for XAI evaluation) via these three key implementation goals:
+
+\begin{itemize}
+  \item \textbf{Hybrid model architecture}: Combines both the interpretability of models such as random forest and the power of transformer-based models \citep{shirazi2022towards} for both global and local explanations.
+  \item \textbf{XAI-first design}: Integrates techniques such as LIME and SHAP directly into the training pipeline. This is to guarantee that explanations are as useful to the user, alongside the typical accuracy metrics \citep{shendkar2024enhancing}.
+  \item \textbf{Adaptive thresholding}: Adjust classification threshholds based on risk scores that are feature specific. This is to mitigate the effects of false negatives as much as possible, within important security contexts \citep{atlam2022business}.
+\end{itemize}
+
+\noindent The developmental process followed a stages approach:
+
+\begin{enumerate}
+  \item \textbf{Baseline establishment}: Standalone models, like random forest and BERT, should be evaluated on standard performance metrics such as accuracy, precision, and recall.
+  \item \textbf{Hybrid integration}: The outcome of several models can be combined through weighted voting measures for an ideal F1-score.
+  \item \textbf{XAI aligned}: Importance of features shoudl be ranked and aligned with expert domain knowledge \citep{greco2023explaining}.
+\end{enumerate}
+
+\noindent A methodology like so allows to brige the gap between traditionally black-boxed AI phihshing detection models and more white-box interpretable models, meeting \hyperref[objective-2]{\uline{\textbf{Objective 2}}} whilst simultaneously reaching the defined user-centric goals (\hyperref[objective-4]{\uline{\textbf{Objective 4}}}).
