@@ -1,3 +1,72 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/xai-integration-design.tex
 
 \subsubsection*{XAI integration design}
+The integration of XAI is designed around the need to provide both global and local explanations -- \hyperref[research-gap-3]{\uline{\textbf{Research Gap 3}}} (lack of a standardised framework for XAI evaluation) -- while preserving the model's performance. This particular design takes methods from \cite{ribeiro2016model} and \cite{shendkar2024enhancing} that incorporates phishing-specific adaptations.\newline
+
+\noindent For global explanations:
+
+\begin{itemize}
+  \item \textbf{SHAP for model-wide insights}:
+  \begin{itemize}
+    \item Processes feature importance scores via the TreeSHAP algorithm for random forest \citep{lundberg2017unified}.
+    \item Uses the KernelSHAP algorithm for DistilBERT.
+    \item Top 10 phishing indicators, e.g., whether the URL length is less than 75 charactes or the presence of urgency phrases, are highlighted in a plot. 
+    \item Dependence plots are generated to show interactions between features, e.g., a hyperlink that does not redirect to the claimed destination URL.
+  \end{itemize}
+  \item \textbf{Transformer attention visualisation}:
+  \begin{itemize}
+    \item Attention weights from the CLS token of DistilBERT's final layer are extracted \citep{vo2024securing}.
+    \item Identifies salient text spans, i.e. "Your account will be suspended unless...".
+    \item Aggregate patterns in attention for phishing and non-phishing classes to look out for systematic biases.
+  \end{itemize}
+\end{itemize}
+
+\noindent For local explanations:
+
+\begin{itemize}
+  \item \textbf{LIME for instance-level analysis}:
+  \begin{itemize}
+    \item Modify input text/URLs to identify distinct decision boundaries \citep{ribeiro2016model}.
+    \item Highlight suspicious sentences and metadata for emails.
+    \item Flag suspicious components in URLs like subdomains or "@" symbols.
+  \end{itemize}
+  \item \textbf{Counterfactual explanations}:
+  \begin{itemize}
+    \item Uses DiCE to generate "what if" scenarios, such as:
+    \begin{itemize}
+      \item "This email would be legitimate if it didn't contain 'immediate action required'".
+      \item "This URL would be safe if the given domain matches the displayed text".
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Unified explanation interface}:
+  \begin{itemize}
+    \item Present XAI explanations, via SHAP and LIMA, in a unified and detailed dashboard.
+    \item Have colour codes for features, ranked by risk level: 
+    \begin{itemize}
+      \item \textit{Red}: High-risk, e.g., mismatched sender domains.
+      \item \textit{Amber}: Medium-risk, e.g., generic greetings.
+      \item \textit{Green}: Legitimate indicators.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\noindent To validate these XAI explanations:
+
+\begin{itemize}
+  \item \textbf{Human-on-the-loop evaluation}:
+  \begin{itemize}
+    \item Recieve feedback from experts or those knowledgable in the same domain on:
+    \begin{itemize}
+      \item The completeness of explanations, and whether they cover all identified suspicious elements.
+      \item How actionable the explanations are, whether they provide clear next steps.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Quantitative metrics}:
+  \begin{itemize}
+    \item This is to track:
+    \begin{itemize}
+      \item Fidelity of explanations, measures in terms of \% on the agreement between SHAP/LIME and predictions made by the model.
+      \item Time taken for users to make decisions, both with and without explanations.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
