@@ -1,3 +1,49 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/explainability-libraries.tex
 
 \subsubsection*{Explainability libraries}
+The integration of XAI allows for both global and local explanations, helping address \hyperref[research-gap-3]{\uline{\textbf{Research Gap 3}}} (the need for a standardised XAI evaluation framework). XAI design can be implemented via libraries, and these are carefully selected based on studies from \cite{shendkar2024enhancing} and \cite{reddy2023explainable}, that define XAI benchmarks.\newline
+
+\noindent For practical SHAP:
+
+\begin{itemize}
+  \item \textbf{Global explanations}:
+  \begin{itemize}
+    \item Uses "\texttt{TreeExplainer}" for random forest, providing an exact computation, and "\texttt{KernelExplainer}" for DistilBERT, for model-agnostic approximations.
+    \item Generates feature importance and dependence plots for interaction analysis between specific features.
+  \end{itemize}
+  \item \textbf{Phishing-specific adaptations}:
+  \begin{itemize}
+    \item Create custom masks for sensitive features (email addresses, IPs) in visualisations.
+    \item Use absolute SHAP value thresholding ($>0.01$) to remove noise in data.
+  \end{itemize}
+\end{itemize}
+
+\noindent For practical LIME:
+
+\begin{itemize}
+  \item \textbf{Local explanations}:
+  \begin{itemize}
+    \item Generate text explanations with "\texttt{LimeTextExplainer}" for sentence-level highlighting and usability feature limitation \citep{greco2023explaining}.
+    \item Format explanations in a tabular display for metadata features, like mismatches in email headers.
+  \end{itemize}
+  \item \textbf{Optimisations}:
+  \begin{itemize}
+    \item Set the perturbation set size to 5,000, as validated in \cite{ribeiro2016model}.
+    \item Maintain linguistic context with cosine similarity kernel.
+  \end{itemize}
+\end{itemize}
+
+\noindent Next, using "\texttt{transformers-interpret}" alongside the "\texttt{transformers}" HuggingFace library, to understand the inner workings of transformer-based models:
+
+\begin{itemize}
+  \item \textbf{Attention visualisation}:
+  \begin{itemize}
+    \item Extract attention weights (layer-wise) from DistilBERT's [CLS] tokens.
+    \item Generate heatmaps for particularly suspicious phrases.
+  \end{itemize}
+  \item \textbf{Adaptations}:
+  \begin{itemize}
+    \item Use filters on attention heads with variance $<0.1$ -- i.e. low-information heads.
+    \item Accumulate explanations across both phisihng and non-phishing classes.
+  \end{itemize}
+\end{itemize}

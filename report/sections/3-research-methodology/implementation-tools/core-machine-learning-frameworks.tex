@@ -1,3 +1,46 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/core-machine-learning-frameworks.tex
 
 \subsubsection*{Core machine learning frameworks}
+Optimised frameworks, which have the capability to balance both performance and explainability, are chosen for this implementation, helping to fulfill \hyperref[objective-2]{\uline{\textbf{Objective 2}}} and \hyperref[objective-3]{\uline{\textbf{Objective 3}}}. It is important to note that the selection of these tools align with reccomendations from works by \cite{shirazi2022towards} and \cite{gupta2021novel}.\newline
+
+\noindent The "\texttt{sckit-learn}" Python library will prove to be useful for the random forest classifier, specifically boasting XAI-compatible packages. It obscures the complex implementations behind such models and provides a base classifier to futher configure upon.
+
+\begin{itemize}
+  \item \textbf{Key features}:
+  \begin{itemize}
+    \item Supports SHAP integration natively with the "\texttt{TreeExplainer}" extension, for global feature explanations \citep{lundberg2017unified}.
+    \item Can efficiently handle numerous types of features, such as numerical and categorial, without the need for one-hot encoding.
+    \item Allows for class-weighted training, i.e. "\texttt{class\_weight='balanced'}", as a countermeasure for dataset imbalances.
+  \end{itemize}
+  \item \textbf{Phishing-specific configurations}:
+  \begin{itemize}
+    \item With "\texttt{max\_depth=12}", it allows for the optimisation of interpretability settings, as per \citep{greco2023explaining}.
+    \item With "n\_estimators=200", i.e. the number of trees in the random forest model, it allows for a reasonable balance between performance and computational cost, validated by \cite{kapoor2024comparative}.
+  \end{itemize}
+\end{itemize}
+
+\noindent The "HuggingFace Transformers" Python library contains thousands of pre-trained models which can easily be called. This library is helpful for abstracting the training complexities and implementation details behind a transformer model. In our case, it is used to call upon a baseline DistilBERT model, which can then be fine-tuned for text-based phishing detection.
+
+\begin{itemize}
+  \item \textbf{Key features}:
+  \begin{itemize}
+    \item Utilising a pre-trained "\texttt{distilbert-base-uncased}" model for transfer learning tasks.
+    \item Boasts attention head extraction which is used for subsequent explainability \citep{vo2024securing}.
+  \end{itemize}
+  \item \textbf{Phishing-specific configurations}:
+  \begin{itemize}
+    \item Sequence length needs to be cut down to 256 tokens. This covers 95\% of phishing emails, as per \cite{sanchez2022phishing}.
+    \item Fine-tuning can be stablised by setting the learning warmup rate over the first 10\% of steps.
+  \end{itemize}
+\end{itemize}
+
+\noindent Another Python library, "\texttt{imbalanced-learn}", can address class imbalances in datasets during the model training process.
+
+\begin{itemize}
+  \item \textbf{Key features}:
+  \begin{itemize}
+    \item Use cluster-based undersampling for majority classes \citep{zamir2020phishing}.
+    \item Utilises SMOTE oversampling with \texttt{k\_neighbours=5} for smaller class synthesis.
+  \end{itemize}
+  \item \textbf{Integration}: Only applied during training process on the training data to prevent data leakage.
+\end{itemize}
