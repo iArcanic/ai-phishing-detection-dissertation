@@ -1,3 +1,65 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/data-processing-pipeline.tex
 
 \subsubsection*{Data processing pipeline}
+The preprocessing workflow defined utlises NLP and security-based techniques to transform the raw emails from the dataset into a format that can be understood by the machine learning model. Methods from \cite{zamir2020phishing} and \cite{ahmad2024across} are used, with XAI in mind.\newline
+
+\noindent SpaCy is a modularied way for implementing the required NLP techniques for this pipeline in terms of text preprocessing, and supports the subsequent training workflows.
+
+\begin{itemize}
+  \item \textbf{Text processing}:
+  \begin{itemize}
+    \item The "\texttt{en\_core\_web\_lg}" pipeline can be used for:
+    \begin{itemize}
+      \item Security aware tokenisation to preserve phishing indicators.
+      \item Use named entity recognition to hide user personal information (email addresses, IPs, phone numbers).
+    \end{itemize}
+    \item Craft a custom rule set for phishing patterns:
+    \begin{itemize}
+      \item Create handcrafted rules for certain phishing phrases.
+      \item Validated against phishing lexicons defined by \cite{greco2023explaining}.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Feature extraction}:
+  \begin{itemize}
+    \item The "\texttt{TransformerModel}" extension supports sentence embeddings, to align with DistilBERT's inputs.
+    \item Flesch-Kincaid readability scores can be used for social engineering detection.
+  \end{itemize}
+\end{itemize}
+
+\noindent HTML and XML input from these emails need to be effectively parsed and cleaned, so this is where the Beautiful Soup Python library is used.
+
+\begin{itemize}
+  \item \textbf{HTML sanitisation}:
+  \begin{itemize}
+    \item Visible email text is extracted only, but the following is still meaintained:
+    \begin{itemize}
+      \item Hyperlink destinations that serve as common phishing vectors.
+      \item Header metadata, such as "From", "To", or "Subject".
+    \end{itemize}
+    \item Discard the following:
+    \begin{itemize}
+      \item Embedded styles or scripts, that could be obfuscation attempts by an adversary.
+      \item Hidden "\texttt{<div>}" tags or other HTML elements that could be used for cloaking.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{Adversarial handling}:
+  \begin{itemize}
+    \item Decode obfuscation through characters, such as "\&nbsp;" and zero-width spaces.
+    \item Track cleaning operations for post forensic review.
+  \end{itemize}
+\end{itemize}
+
+\noindent The "\texttt{python-whois}" Python module is needed to retrieve, process, and format WHOIS data for reputation analysis on domains that appear in the phishing emails, as well as URL evaluation.
+
+\begin{itemize}
+  \item \textbf{URL feature extraction}:
+  \begin{itemize}
+    \item Process domain ages via a calculation, with a filter for sites that are less than 30 days old -- usually indicative of a phishing email \citep{palaniappan2020malicious}.
+    \item Conduct registrar analysts for high-risk TLDs for e.g., "\texttt{.top}" or "\texttt{.gq}".
+  \end{itemize}
+  \item \textbf{Caching}:
+  \begin{itemize}
+    \item Set a 7-day TTL for WHOIS records, to strike a balance between freshness and performance.
+    \item If rate-limited due to computational contraints, fall back to cached data.
+  \end{itemize}
+\end{itemize}
