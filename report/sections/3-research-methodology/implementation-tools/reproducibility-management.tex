@@ -1,0 +1,59 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/reproducibility-management.tex
+
+\subsubsection*{Reproducibility management}
+Full reproducibility is a vital aspect of this project, throughout this process, via version-controlled code, structured notebooks, interactive visualisation, and documentation, whilst adhering to FAIR principles. The following tools were used to ensure reproducibility:\newline
+
+\noindent GitHub is a cloud-based version control platform for collaborative software development and code management, providing a web-based interface for Git, a distributed version control system that tracks changes in source code during software development. It's arguably the most well-known solution for open-source projects, allowing developers to collaborate, share code, and manage project documentation.
+
+\begin{itemize}
+  \item \textbf{Code tracking}:
+  \begin{itemize}
+    \item The codebase was comprised of the following repository structure:
+    \begin{itemize}
+      \item "\texttt{/notebooks}": Contains Jupyter notebooks for data exploration, preprocessing, and model training, e.g. "\texttt{01\_preprocess\_data.ipynb}",\newline "\texttt{02\_train\_models.ipynb}".
+      \item "\texttt{/data}": Consists of raw, unprocessed datasets, with "\texttt{git-lfs}" being used for large files.
+      \item "\texttt{/src}": Has modular Python scripts and Flask web UI.
+    \end{itemize}
+    \item The commit messages follow a conventional commit description for writing clear and consistent commit messages to improve the readability and maintainability of the codebase, making it easy to understand the purpose and impact of each change.
+  \end{itemize}
+  \item \textbf{Collaboration features (for future extensibility)}:
+  \begin{itemize}
+    \item Generate issue templates for bug reports, feature requests, and documentation updates.
+    \item Have regular pull request reviews to ensure code quality and knowledge sharing, with regular updates to versions and packages in "\texttt{requirements.txt}".
+  \end{itemize}
+\end{itemize}
+
+\noindent Jupyter Notebooks are a web-based computing environment allowing users to create and share documents containing live code, equations, visualisations, and narrative text. They are most commonly used in data science, machine learning, and scientific computing for interactive data analysis, prototyping, and sharing results.
+
+\begin{itemize}
+  \item \textbf{Execution reproducibility}:
+  \begin{itemize}
+    \item Use kernel snapshots with the "\texttt{watermark}" Python package, for example:
+    \begin{ffcode}
+    %load_ext watermark
+    %watermark -v -p numpy,pandas,matplotlib,scikit-learn,flask
+    \end{ffcode}
+    \item Output cells should have their results preserved to verify results without having to re-run notebooks.
+  \end{itemize}
+\item \textbf{Documentation standards}:
+  \begin{itemize}
+    \item Clear markdown headers for each cell, with sufficient detail for each major step.
+    \item Include hyperlinks to external resources, such as the original dataset, and relevant research papers.
+    \item Use warning cells for operations that may take a long time to run, such as training models.
+  \end{itemize}
+\end{itemize}
+
+\noindent Environment management is the practice of organising and maintaining the software and hardware dependencies required to run a project, ensuring that the code runs consistently across various systems and configurations. For such a project, this is particularly important as different libraries (and versions) can lead to different results.
+
+\begin{itemize}
+  \item \textbf{Package control}:
+  \begin{itemize}
+    \item Use a "\texttt{requirements.txt}" file to specify the exact versions of all packages used in the project, to recreate the exact same environment.
+    \item Use an "\texttt{environment.yml}" file for Conda users.
+  \end{itemize}
+  \item \textbf{Binder integration}:
+  \begin{itemize}
+    \item Have one-click reproducibility with \href{https://mybinder.org}{"\texttt{mybinder.org}"}.
+    \item Include details explicitly in "\texttt{README}" files.
+  \end{itemize}
+\end{itemize}
