@@ -1,3 +1,47 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/evaluation-framework/model-performance-metrics.tex
 
 \subsubsection*{Model performance metrics}
+First, this evaluation framework employs standard classification metrics, as well as phishing-specific criteria to serve as an assessment for assessing the detection capabilities of the model. It utlises benchmarking methods from \cite{kapoor2024comparative} and \cite{zamir2020phishing} to evaluate the model's performance.\newline
+
+\noindent Standard classification metrics.
+
+\begin{itemize}
+  \item \textbf{Precision-recall trade-off}:
+  \begin{itemize}
+    \item \textit{Precision}: $\frac{TP}{TP + FP}$, helps minimise false alarms.
+    \item \textit{Recall}: $\frac{TP}{TP + FN}$, prioritises true positives, i.e. catching attacks.
+    \item \textit{F2-score}: $\frac{5 \cdot \text{Precision} \cdot \text{Recall}}{4 \cdot \text{Precision} + \text{Recall}}$, emphasises recall over precision.
+  \end{itemize}
+  \item \textbf{AUC-ROC}:
+  \begin{itemize}
+    \item Is a measure of the separability of phishing email classes against legitimate email classes.
+    \item A critical metric for evaluating the model's performance, given inherent imbalance in datasets \citep{ahmad2024across}.
+  \end{itemize}
+\end{itemize}
+
+\noindent Phishing-specific adaptations.
+
+\begin{itemize}
+  \item \textbf{Cost-sensitive accuracy}:
+  \begin{itemize}
+    \item Use weighted error metrics from \cite{atlam2022business} to account for the cost of misclassifying phishing emails as legitimate:
+    \begin{equation}
+      \text{Cost-sensitive accuracy (CSA)} = 1 - \left(\frac{0.2 \cdot FP + 0.8 \cdot FN}{N}\right)
+    \end{equation}
+    \item Reflects a 4:1 ratio of legitimate to phishing emails, where the cost of misclassifying a phishing email (false positive) is 4 times that of a legitimate email (false negative).
+  \end{itemize}
+  \item \textbf{Time-to-Detection (TTD)}:
+  \begin{itemize}
+    \item Measures the latency between email arrival and detection.
+    \item Important for real-time detection, especially in high-volume environments, where the target is under 2 minutes \citep{shirazi2022towards}.
+  \end{itemize}
+  \item \textbf{Attack-type breakdown}:
+  \begin{itemize}
+    \item Use separate metrics for different attack types, such as:
+    \begin{itemize}
+      \item URL phishing (precision focus).
+      \item Social engineering (recall focus).
+      \item Business email compromise (F2-score focus).
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
