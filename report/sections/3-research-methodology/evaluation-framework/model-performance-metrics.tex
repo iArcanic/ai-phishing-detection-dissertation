@@ -3,7 +3,7 @@
 \subsubsection*{Model performance metrics}
 First, this evaluation framework employs standard classification metrics, as well as phishing-specific criteria to serve as an assessment for assessing the detection capabilities of the model. It utlises benchmarking methods from \cite{kapoor2024comparative} and \cite{zamir2020phishing} to evaluate the model's performance.\newline
 
-\noindent Standard classification metrics.
+\noindent Generally, all classification models are evaluated using some baseline metrics, but for this specific use-case, the algorithms are evaluated using a set of standard metrics, which are then adapted to the specific needs of phishing detection.
 
 \begin{itemize}
   \item \textbf{Precision-recall trade-off}:
@@ -19,7 +19,7 @@ First, this evaluation framework employs standard classification metrics, as wel
   \end{itemize}
 \end{itemize}
 
-\noindent Phishing-specific adaptations.
+\noindent Phishing-specific metrics are also used to evaluate the model's performance, as they are more relevant to the specific use-case of phishing detection.
 
 \begin{itemize}
   \item \textbf{Cost-sensitive accuracy}:
