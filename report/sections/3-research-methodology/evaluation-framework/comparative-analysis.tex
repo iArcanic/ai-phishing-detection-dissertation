@@ -1,3 +1,43 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/evaluation-framework/comparative-analysis.tex
 
 \subsubsection*{Comparative analysis}
+The XAI-phishing system shold be compared against defined benchmarks, helping address \hyperref[research-gap-1]{\uline{\textbf{Research Gap 1}}} in trade-offs between performance and interpretability. The comparative analysis should be performed using the same dataset and evaluation metrics as the XAI-phishing system \citep{do2024integrated}.\newline
+
+\noindent The phishing system's performance can be reliably evaluated by comparing it against baseline benchmarks, which include traditional machine learning (ML) models, deep learning approaches, and commercial solutions.
+
+\begin{itemize}
+  \item \textbf{Traditional ML models}:
+  \begin{itemize}
+    \item RF with SHAP explanations \citep{gupta2021novel}.
+    \item SVM with LIME explanations \citep{andriu2023adaptive}.
+    \item Performance metrics like F2-score, inference latency, and SHAP consistency.
+  \end{itemize}
+  \item \textbf{Deep learning approaches}:
+  \begin{itemize}
+    \item BERT-based detectors \citep{shirazi2022towards}.
+    \item CNN-LTSM hybrid models \citep{alsariera2020ai}.
+    \item Other metrics like attention map interpretability and adversarial robustness.
+  \end{itemize}
+  \item \textbf{Commercial solutions}:
+  \begin{itemize}
+    \item Microsoft Defender for Office 365.
+    \item Proofpoint email protection.
+    \item Comparison on false negative rates and availability of explanations.
+  \end{itemize}
+\end{itemize}
+
+\noindent Ablation studies are a technique in which ML-based models can be evaluated by removing or modifying certain components to understand their impact on the overall performance. This approach can help identify the most critical components of the XAI-phishing system and provide insights into how different elements contribute to its effectiveness. The ablation studies is performed using the same dataset and evaluation metrics as the XAI-phishing system \citep{do2024integrated}.
+
+\begin{itemize}
+  \item \textbf{Component importance}:
+  \begin{itemize}
+    \item Include hybrid vs standalone models, such as RF-only vs BERT-only vs Hybrid.
+    \item With and without XAI components, such as SHAP vs LIME.
+    \item With and without adversarial training.
+  \end{itemize}
+  \item \textbf{Metric variations}:
+  \begin{itemize}
+    \item F2-score negative correlation, when enforcing consistency of explanations.
+    \item Calculate the throughput impact of generating explanations in real-time.
+  \end{itemize}
+\end{itemize}
