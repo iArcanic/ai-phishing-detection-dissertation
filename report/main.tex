@@ -3,38 +3,11 @@
 \documentclass[pdftex,10pt,a4paper,oneside]{article}
 
 % Packages
-\usepackage{amsmath}
-\numberwithin{equation}{section}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\usepackage{fancyhdr}
-\usepackage{graphicx}
-\usepackage{setspace}
-\usepackage[]{fncychap}
-\usepackage[hyphens]{url}
-\usepackage{xcolor}
-\usepackage{tabularx}
-\usepackage{appendix}
-\usepackage[hidelinks]{hyperref}
-\usepackage{pdfpages}
-\usepackage[round]{natbib}
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{longtable}
-\usepackage{caption}
-\usepackage{pdflscape}
-\usepackage{lscape}
-\usepackage[normalem]{ulem}
-\usepackage{ffcode}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+\input{preamble/packages}
 
 % Fancy header/footer
-\fancyhf{}
-\pagestyle{fancy}
-\renewcommand{\headrulewidth}{0.2pt}
-\fancyfoot[C]{\thepage}
+\input{preamble/fancy-header-footer}
 
-% Begin document
 \begin{document}
 
 % Preamble
@@ -71,14 +44,14 @@
 \input{sections/2-literature-review/introduction}
 
 % AI-based phishing detection models
-\subsection*{AI-based phishing detection models}
+\subsection{AI-based phishing detection models}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
 \input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
 
 % Challenges in AI-based phishing detection
-\subsection*{Challenges in AI-based phishing detection}
+\subsection{Challenges in AI-based phishing detection}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/data-set-and-model-performance-issues}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/privacy-and-error-trade-offs}
@@ -86,7 +59,7 @@
 \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
 
 % XAI in the context of phishing detection
-\subsection*{XAI in the context of phishing detection}
+\subsection{XAI in the context of phishing detection}
 \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
 \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
 \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/xai-techniques-and-methodologies}
@@ -96,7 +69,7 @@
 \newpage
 
 % Research gaps
-\subsection*{Research gaps}
+\subsection{Research gaps}
 \input{sections/2-literature-review/research-gaps/introduction}
 \input{sections/2-literature-review/research-gaps/research-gap-1}
 \input{sections/2-literature-review/research-gaps/research-gap-2}
@@ -112,7 +85,7 @@
 \newpage
 
 % Justification for this study
-\subsection*{Justification for this study}
+\subsection{Justification for this study}
 \input{sections/2-literature-review/justification-for-this-study/introduction}
 \input{sections/2-literature-review/justification-for-this-study/justification-1}
 \input{sections/2-literature-review/justification-for-this-study/justification-2}
@@ -132,7 +105,7 @@
 \input{sections/3-research-methodology/introduction}
 
 % Datasets
-\subsection*{Datasets}
+\subsection{Datasets}
 \input{sections/3-research-methodology/datasets/introduction}
 \input{sections/3-research-methodology/datasets/sources-to-consider}
 \input{sections/3-research-methodology/datasets/strengths-and-limitations}
@@ -144,7 +117,7 @@
 \newpage
 
 % Data preprocessing
-\subsection*{Data preprocessing}
+\subsection{Data preprocessing}
 \input{sections/3-research-methodology/data-preprocessing/introduction}
 \newpage
 \input{sections/3-research-methodology/data-preprocessing/data-cleaning-and-normalisation}
@@ -166,7 +139,7 @@
 \newpage
 
 % Model development
-\subsection*{Model development}
+\subsection{Model development}
 \input{sections/3-research-methodology/model-development/introduction}
 \newpage
 \input{sections/3-research-methodology/model-development/model-selection-and-hybrid-architecture}
@@ -178,7 +151,7 @@
 \input{sections/3-research-methodology/model-development/security-specific-adaptations}
 
 % Evaluation framework
-\subsection*{Evaluation framework}
+\subsection{Evaluation framework}
 \input{sections/3-research-methodology/evaluation-framework/introduction}
 \newpage
 \input{sections/3-research-methodology/evaluation-framework/model-performance-metrics}
@@ -192,7 +165,7 @@
 \newpage
 
 % Implementation tools
-\subsection*{Implementation tools}
+\subsection{Implementation tools}
 \input{sections/3-research-methodology/implementation-tools/introduction}
 \newpage
 \input{sections/3-research-methodology/implementation-tools/core-machine-learning-frameworks}
