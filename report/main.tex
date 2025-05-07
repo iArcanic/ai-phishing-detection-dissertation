@@ -1,6 +1,11 @@
 % ai-based-phishing-detection-dissertation/report/main.tex
 
-\documentclass[pdftex,10pt,a4paper,oneside]{article}
+\documentclass[
+  pdftex,
+  10pt,
+  a4paper,
+  oneside
+]{article}
 
 % Packages
 \input{preamble/packages}
@@ -10,193 +15,193 @@
 
 \begin{document}
 
-% Preamble
-\input{preamble/frontpage}
-\newpage
-\input{preamble/abstract}
-\newpage
-\input{preamble/acknowledgements}
-\newpage
-\input{preamble/abbreviations}
-\newpage
-\input{preamble/contents}
-\newpage
-% \input{preamble/lists}
-% \newpage
+  % Preamble
+  \input{preamble/frontpage}
+  \newpage
+  \input{preamble/abstract}
+  \newpage
+  \input{preamble/acknowledgements}
+  \newpage
+  \input{preamble/abbreviations}
+  \newpage
+  \input{preamble/contents}
+  \newpage
+  % \input{preamble/lists}
+  % \newpage
 
-% Page styling
-\input{preamble/chapter-mods}
-\input{preamble/landscape-style}
-\newpage
+  % Page styling
+  \input{preamble/chapter-mods}
+  \input{preamble/landscape-style}
+  \newpage
 
-% Sections
+  % Sections
 
-% 1: Introduction
-\section{Introduction}\label{sec:1-introduction}
-\input{sections/1-introduction/background}
-\input{sections/1-introduction/objectives}
-\input{sections/1-introduction/research-questions}
-\input{sections/1-introduction/structure}
-\newpage
+  % 1: Introduction
+  \section{Introduction}\label{sec:1-introduction}
+  \input{sections/1-introduction/background}
+  \input{sections/1-introduction/objectives}
+  \input{sections/1-introduction/research-questions}
+  \input{sections/1-introduction/structure}
+  \newpage
 
-% 2: Literature review
-\section{Literature review}\label{sec:2-literature-review}
-\input{sections/2-literature-review/introduction}
+  % 2: Literature review
+  \section{Literature review}\label{sec:2-literature-review}
+  \input{sections/2-literature-review/introduction}
 
-% AI-based phishing detection models
-\subsection{AI-based phishing detection models}
-\input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
-\input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
-\input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
-\input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
+  % AI-based phishing detection models
+  \subsection{AI-based phishing detection models}
+  \input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
+  \input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
+  \input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
+  \input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
 
-% Challenges in AI-based phishing detection
-\subsection{Challenges in AI-based phishing detection}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/data-set-and-model-performance-issues}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/privacy-and-error-trade-offs}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/interpretability-and-xai-challenges}
-\input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
+  % Challenges in AI-based phishing detection
+  \subsection{Challenges in AI-based phishing detection}
+  \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/data-set-and-model-performance-issues}
+  \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
+  \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/privacy-and-error-trade-offs}
+  \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/interpretability-and-xai-challenges}
+  \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
 
-% XAI in the context of phishing detection
-\subsection{XAI in the context of phishing detection}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/xai-techniques-and-methodologies}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/practical-implementations-and-case-studies}
-\input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/future-directions}
+  % XAI in the context of phishing detection
+  \subsection{XAI in the context of phishing detection}
+  \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
+  \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
+  \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/xai-techniques-and-methodologies}
+  \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/practical-implementations-and-case-studies}
+  \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/future-directions}
 
-\newpage
+  \newpage
 
-% Research gaps
-\subsection{Research gaps}
-\input{sections/2-literature-review/research-gaps/introduction}
-\input{sections/2-literature-review/research-gaps/research-gap-1}
-\input{sections/2-literature-review/research-gaps/research-gap-2}
-\input{sections/2-literature-review/research-gaps/research-gap-3}
-\input{sections/2-literature-review/research-gaps/research-gap-4}
-\input{sections/2-literature-review/research-gaps/research-gap-5}
-\input{sections/2-literature-review/research-gaps/research-gap-6}
-\input{sections/2-literature-review/research-gaps/research-gap-7}
-\input{sections/2-literature-review/research-gaps/research-gap-8}
-\input{sections/2-literature-review/research-gaps/research-gap-9}
-\input{sections/2-literature-review/research-gaps/research-gap-10}
+  % Research gaps
+  \subsection{Research gaps}
+  \input{sections/2-literature-review/research-gaps/introduction}
+  \input{sections/2-literature-review/research-gaps/research-gap-1}
+  \input{sections/2-literature-review/research-gaps/research-gap-2}
+  \input{sections/2-literature-review/research-gaps/research-gap-3}
+  \input{sections/2-literature-review/research-gaps/research-gap-4}
+  \input{sections/2-literature-review/research-gaps/research-gap-5}
+  \input{sections/2-literature-review/research-gaps/research-gap-6}
+  \input{sections/2-literature-review/research-gaps/research-gap-7}
+  \input{sections/2-literature-review/research-gaps/research-gap-8}
+  \input{sections/2-literature-review/research-gaps/research-gap-9}
+  \input{sections/2-literature-review/research-gaps/research-gap-10}
 
-\newpage
+  \newpage
 
-% Justification for this study
-\subsection{Justification for this study}
-\input{sections/2-literature-review/justification-for-this-study/introduction}
-\input{sections/2-literature-review/justification-for-this-study/justification-1}
-\input{sections/2-literature-review/justification-for-this-study/justification-2}
-\input{sections/2-literature-review/justification-for-this-study/justification-3}
-\input{sections/2-literature-review/justification-for-this-study/justification-4}
-\input{sections/2-literature-review/justification-for-this-study/justification-5}
-\input{sections/2-literature-review/justification-for-this-study/theoretical-and-practical-contributions}
-\newpage
-\input{sections/2-literature-review/summary-of-existing-phishing-detection-techniques}
-\newpage
-\input{sections/2-literature-review/summary-of-xai-techniques}
+  % Justification for this study
+  \subsection{Justification for this study}
+  \input{sections/2-literature-review/justification-for-this-study/introduction}
+  \input{sections/2-literature-review/justification-for-this-study/justification-1}
+  \input{sections/2-literature-review/justification-for-this-study/justification-2}
+  \input{sections/2-literature-review/justification-for-this-study/justification-3}
+  \input{sections/2-literature-review/justification-for-this-study/justification-4}
+  \input{sections/2-literature-review/justification-for-this-study/justification-5}
+  \input{sections/2-literature-review/justification-for-this-study/theoretical-and-practical-contributions}
+  \newpage
+  \input{sections/2-literature-review/summary-of-existing-phishing-detection-techniques}
+  \newpage
+  \input{sections/2-literature-review/summary-of-xai-techniques}
 
-\newpage
+  \newpage
 
-% 3: Research methodology
-\section{Research methodology}\label{sec:3-research-methodology}
-\input{sections/3-research-methodology/introduction}
+  % 3: Research methodology
+  \section{Research methodology}\label{sec:3-research-methodology}
+  \input{sections/3-research-methodology/introduction}
 
-% Datasets
-\subsection{Datasets}
-\input{sections/3-research-methodology/datasets/introduction}
-\input{sections/3-research-methodology/datasets/sources-to-consider}
-\input{sections/3-research-methodology/datasets/strengths-and-limitations}
-\input{sections/3-research-methodology/datasets/selection-criteria}
-\input{sections/3-research-methodology/datasets/final-selection-and-justification}
-\newpage
-\input{sections/3-research-methodology/datasets/summary-of-datasets}
+  % Datasets
+  \subsection{Datasets}
+  \input{sections/3-research-methodology/datasets/introduction}
+  \input{sections/3-research-methodology/datasets/sources-to-consider}
+  \input{sections/3-research-methodology/datasets/strengths-and-limitations}
+  \input{sections/3-research-methodology/datasets/selection-criteria}
+  \input{sections/3-research-methodology/datasets/final-selection-and-justification}
+  \newpage
+  \input{sections/3-research-methodology/datasets/summary-of-datasets}
 
-\newpage
+  \newpage
 
-% Data preprocessing
-\subsection{Data preprocessing}
-\input{sections/3-research-methodology/data-preprocessing/introduction}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/data-cleaning-and-normalisation}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/summary-of-data-cleaning-operations}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/text-specific-processing}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/text-processing-pipeline}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/feature-engineering}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/feature-taxonomy}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/dataset-balancing-and-splitting}
-\newpage
-\input{sections/3-research-methodology/data-preprocessing/data-distribution}
+  % Data preprocessing
+  \subsection{Data preprocessing}
+  \input{sections/3-research-methodology/data-preprocessing/introduction}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/data-cleaning-and-normalisation}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/summary-of-data-cleaning-operations}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/text-specific-processing}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/text-processing-pipeline}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/feature-engineering}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/feature-taxonomy}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/dataset-balancing-and-splitting}
+  \newpage
+  \input{sections/3-research-methodology/data-preprocessing/data-distribution}
 
-\newpage
+  \newpage
 
-% Model development
-\subsection{Model development}
-\input{sections/3-research-methodology/model-development/introduction}
-\newpage
-\input{sections/3-research-methodology/model-development/model-selection-and-hybrid-architecture}
-\input{sections/3-research-methodology/model-development/xai-integration-design}
-\newpage
-\input{sections/3-research-methodology/model-development/xai-interface}
-\newpage
-\input{sections/3-research-methodology/model-development/training-and-optimisation}
-\input{sections/3-research-methodology/model-development/security-specific-adaptations}
+  % Model development
+  \subsection{Model development}
+  \input{sections/3-research-methodology/model-development/introduction}
+  \newpage
+  \input{sections/3-research-methodology/model-development/model-selection-and-hybrid-architecture}
+  \input{sections/3-research-methodology/model-development/xai-integration-design}
+  \newpage
+  \input{sections/3-research-methodology/model-development/xai-interface}
+  \newpage
+  \input{sections/3-research-methodology/model-development/training-and-optimisation}
+  \input{sections/3-research-methodology/model-development/security-specific-adaptations}
 
-% Evaluation framework
-\subsection{Evaluation framework}
-\input{sections/3-research-methodology/evaluation-framework/introduction}
-\newpage
-\input{sections/3-research-methodology/evaluation-framework/model-performance-metrics}
-\input{sections/3-research-methodology/evaluation-framework/explainability-evaluation}
-\newpage
-\input{sections/3-research-methodology/evaluation-framework/xai-evaluation-targets}
-\newpage
-\input{sections/3-research-methodology/evaluation-framework/comparative-analysis}
-\input{sections/3-research-methodology/evaluation-framework/adversarial-testing}
+  % Evaluation framework
+  \subsection{Evaluation framework}
+  \input{sections/3-research-methodology/evaluation-framework/introduction}
+  \newpage
+  \input{sections/3-research-methodology/evaluation-framework/model-performance-metrics}
+  \input{sections/3-research-methodology/evaluation-framework/explainability-evaluation}
+  \newpage
+  \input{sections/3-research-methodology/evaluation-framework/xai-evaluation-targets}
+  \newpage
+  \input{sections/3-research-methodology/evaluation-framework/comparative-analysis}
+  \input{sections/3-research-methodology/evaluation-framework/adversarial-testing}
 
-\newpage
+  \newpage
 
-% Implementation tools
-\subsection{Implementation tools}
-\input{sections/3-research-methodology/implementation-tools/introduction}
-\newpage
-\input{sections/3-research-methodology/implementation-tools/core-machine-learning-frameworks}
-\input{sections/3-research-methodology/implementation-tools/explainability-libraries}
-\input{sections/3-research-methodology/implementation-tools/data-processing-pipeline}
-\input{sections/3-research-methodology/implementation-tools/user-interface-components}
-\input{sections/3-research-methodology/implementation-tools/reproducibility-management}
-\newpage
-\input{sections/3-research-methodology/implementation-tools/summary-of-reproducibility-tools}
+  % Implementation tools
+  \subsection{Implementation tools}
+  \input{sections/3-research-methodology/implementation-tools/introduction}
+  \newpage
+  \input{sections/3-research-methodology/implementation-tools/core-machine-learning-frameworks}
+  \input{sections/3-research-methodology/implementation-tools/explainability-libraries}
+  \input{sections/3-research-methodology/implementation-tools/data-processing-pipeline}
+  \input{sections/3-research-methodology/implementation-tools/user-interface-components}
+  \input{sections/3-research-methodology/implementation-tools/reproducibility-management}
+  \newpage
+  \input{sections/3-research-methodology/implementation-tools/summary-of-reproducibility-tools}
 
-\newpage
+  \newpage
 
-% 4: Results
-\section{Results}\label{sec:4-results}
-\newpage
+  % 4: Results
+  \section{Results}\label{sec:4-results}
+  \newpage
 
-% 5: Discussion
-\section{Discussion}\label{sec:5-discussion}
-\newpage
+  % 5: Discussion
+  \section{Discussion}\label{sec:5-discussion}
+  \newpage
 
-% 6: Conclusion
-\section{Conclusion}\label{sec:6-conclusion}
-\newpage
+  % 6: Conclusion
+  \section{Conclusion}\label{sec:6-conclusion}
+  \newpage
 
-% 7: References
-\bibliographystyle{agsm}
-\addcontentsline{toc}{section}{References}
-\bibliography{bibliography}
-\newpage
+  % 7: References
+  \bibliographystyle{agsm}
+  \addcontentsline{toc}{section}{References}
+  \bibliography{bibliography}
+  \newpage
 
-% 8: Appendices
-\input{appendices/appendices}
+  % 8: Appendices
+  \input{appendices/appendices}
 
 \end{document}
