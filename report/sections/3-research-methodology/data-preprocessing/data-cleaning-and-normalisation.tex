@@ -9,12 +9,12 @@ When preprocessing phishing data, it requires domain-specific cleaning tactics t
     \item \textit{HTML/formatting removal}:
     \begin{itemize}
       \item HTML tags can be stripped by using the Beautiful Soup Python library \cite{beautifulsoup2025} but with hyperlinks still preserved \citep{bravo2010bridging}.
-      \item MIME encodings should be decoded, i.e. in printable or in base64 format, to recover full text.
+      \item MIME encodings should be decoded, i.e. in printable or in Base64 format, to recover full text.
     \end{itemize}
     \item \textit{Header extraction}:
     \begin{itemize}
       \item Critical headers, such as "\texttt{From}", "\texttt{To}", "\texttt{Subject}", and "\texttt{Reply-To}", should be isolated.
-      \item Any discrepencies in these headers should be flagged as potential phishing indicators \citep{lin2021phishpedia}.
+      \item Any discrepancies in these headers should be flagged as potential phishing indicators \citep{lin2021phishpedia}.
     \end{itemize}
     \item \textit{Text normalisation}:
     \begin{itemize}
@@ -43,7 +43,7 @@ When preprocessing phishing data, it requires domain-specific cleaning tactics t
 \begin{itemize}
   \item \textit{Quoted text/forward chains}:
   \begin{itemize}
-    \item Quoted text should be seperated with heuristics, like "\texttt{>}" prefixes \citep{klimt2004enron}.
+    \item Quoted text should be separated with heuristics, like "\texttt{>}" prefixes \citep{klimt2004enron}.
     \item Recent messages in email threads should be kept only.
   \end{itemize}
   \item \textit{Adversarial samples}:

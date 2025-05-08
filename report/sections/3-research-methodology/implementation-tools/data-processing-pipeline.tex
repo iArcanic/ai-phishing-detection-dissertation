@@ -31,7 +31,7 @@ The preprocessing workflow defined utlises NLP and security-based techniques to 
 \begin{itemize}
   \item \textbf{HTML sanitisation}:
   \begin{itemize}
-    \item Visible email text is extracted only, but the following is still meaintained:
+    \item Visible email text is extracted only, but the following is still maintained:
     \begin{itemize}
       \item Hyperlink destinations that serve as common phishing vectors.
       \item Header metadata, such as "From", "To", or "Subject".
@@ -44,7 +44,7 @@ The preprocessing workflow defined utlises NLP and security-based techniques to 
   \end{itemize}
   \item \textbf{Adversarial handling}:
   \begin{itemize}
-    \item Decode obfuscation through characters, such as "\&nbsp;" and zero-width spaces.
+    \item Decode obfuscation through characters, such as "\textit{\&nbsp;}" and zero-width spaces.
     \item Track cleaning operations for post forensic review.
   \end{itemize}
 \end{itemize}
@@ -60,6 +60,6 @@ The preprocessing workflow defined utlises NLP and security-based techniques to 
   \item \textbf{Caching}:
   \begin{itemize}
     \item Set a 7-day TTL for WHOIS records, to strike a balance between freshness and performance.
-    \item If rate-limited due to computational contraints, fall back to cached data.
+    \item If rate-limited due to computational constraints, fall back to cached data.
   \end{itemize}
 \end{itemize}

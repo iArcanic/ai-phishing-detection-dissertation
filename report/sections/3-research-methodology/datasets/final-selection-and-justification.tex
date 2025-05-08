@@ -1,7 +1,7 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/datasets/final-selection-and-justification.tex
 
 \subsubsection*{Final selection and justification}
-From the evaluation above, the selected datasets that were chosen for this research to address the varied nature of phishing attackes are detailed below. A breakdown is provided, that includes their synergies, and close alignment with the identified research gaps.
+From the evaluation above, the selected datasets that were chosen for this research to address the varied nature of phishing attackers are detailed below. A breakdown is provided, that includes their synergies, and close alignment with the identified research gaps.
 
 \begin{itemize}
   \item \textbf{Primary dataset 1: Enron + CEAS 2008 (email content)}
@@ -13,10 +13,10 @@ From the evaluation above, the selected datasets that were chosen for this resea
   \end{itemize}
   \item \textbf{Primary dataset 2: PhishTank (URL phishing)}
   \begin{itemize}
-    \item 10,000 constantly updated, live phishing URLs that allw for real-world feature extraction.
+    \item 10,000 constantly updated, live phishing URLs that are for real-world feature extraction.
     \item Synergises well with email data suitable for hybrid model training.
     \item Can be integrated via "feature fusion", where a URL's lexical features (e.g. length, special characters) are combined with "WHOIS" data.
-    \item Emails are linked via shared time stamps, e.g. phishing campaigns that have both email and URL componenets.
+    \item Emails are linked via shared time stamps, e.g. phishing campaigns that have both email and URL components.
     \item Support cross-platform detection (\hyperref[research-gap-5]{\uline{\textbf{Research Gap 5}}}).
   \end{itemize}
   \item \textbf{Supplementary dataset 1: SpamAssassin (testing purposes)}
@@ -28,11 +28,11 @@ From the evaluation above, the selected datasets that were chosen for this resea
   \end{itemize}
   \item \textbf{Supplementary dataset 2: Nigerian Fraud Dataset (social engineering)}
   \begin{itemize}
-    \item Tests the models resilience on psychological manipulation and social engineering tactics, llike phrases of urgency.
+    \item Tests the models resilience on psychological manipulation and social engineering tactics, like phrases of urgency.
     \item Can serve as an adversarial subset, with 100 or so samples being injected into the validation data.
     \item Allows the evaluation of fidelity, e.g. if XAI's explanations pick up on the phrases of urgency.
     \item Strengths user-centric XAI explanations (\hyperref[research-gap-2]{\uline{\textbf{Research Gap 2}}}).
   \end{itemize}
 \end{itemize}
 
-\noindent In summary, this specialised selection of these datasets allow for relevancy to be optimised, with a core focus on email and email URL phishing -- the scope of this project. A balance is stuck, with large-scale model training on Enron, PhishTank, and CEAS, along with targeted validation via SpamAssassin and Nigerian Fraud. It is also important to note that the datasets align with the research gaps, such as \hyperref[research-gap-5]{\uline{\textbf{Research Gap 5}}} to address generalisability, \hyperref[research-gap-2]{\uline{\textbf{Research Gap 2}}} concerning utability, and \hyperref[research-gap-4]{\uline{\textbf{Research Gap 4}}} for real-world applications.
+\noindent In summary, this specialised selection of these datasets allow for relevancy to be optimised, with a core focus on email and email URL phishing -- the scope of this project. A balance is stuck, with large-scale model training on Enron, PhishTank, and CEAS, along with targeted validation via SpamAssassin and Nigerian Fraud. It is also important to note that the datasets align with the research gaps, such as \hyperref[research-gap-5]{\uline{\textbf{Research Gap 5}}} to address generalisability, \hyperref[research-gap-2]{\uline{\textbf{Research Gap 2}}} concerning usability, and \hyperref[research-gap-4]{\uline{\textbf{Research Gap 4}}} for real-world applications.

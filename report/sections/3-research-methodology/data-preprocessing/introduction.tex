@@ -1,17 +1,17 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/data-preprocessing/introduction.tex
 
-Phishing detection, one based on a machine learning model, requires the transomation of raw, noise data, into a more structured format. This is to effectively capture attack signatures from datasets well, with the goal of ignoring irrelevant information. This section is responsible for detailing a domain-specific preprocessing pipeline for the selected datasets. This pipeline aims to:
+Phishing detection, one based on a machine learning model, requires the transformation of raw, noise data, into a more structured format. This is to effectively capture attack signatures from datasets well, with the goal of ignoring irrelevant information. This section is responsible for detailing a domain-specific preprocessing pipeline for the selected datasets. This pipeline aims to:
 
 \begin{itemize}
   \item \textbf{Preserve threat indicators}: Cleaning but strategically keep security-critical elements, as identified in \cite{greco2023explaining} and \cite{lin2021phishpedia}.
-  \item \textbf{Optimise for explainability}: Feature engineering has a priority of human-interpretable aspects which are compaitable with XAI techniques (e.g. SHAP/LIME) \citep{shendkar2024enhancing}.
+  \item \textbf{Optimise for explainability}: Feature engineering has a priority of human-interpretable aspects which are compatible with XAI techniques (e.g. SHAP/LIME) \citep{shendkar2024enhancing}.
   \item \textbf{Address phishing-specific challenges}: Issues such as imbalanced class distributions, adversarial attack tactics, and multimodal data, are taken care of with inspiration from methodologies in works such as by \cite{zamir2020phishing} and \cite{ahmad2024across}.
 \end{itemize}
 
 \noindent The pipeline, described in this section, consists of the following stages:
 
 \begin{itemize}
-  \item \textbf{Cleaning \& normalisation}: Sanatise emails and URLs with respect to a security context.
+  \item \textbf{Cleaning \& normalisation}: Sanitise emails and URLs with respect to a security context.
   \item \textbf{Text-specific processing}: Utilise NLP-like techniques that are specifically optimised for phishing linguistics.
   \item \textbf{Feature engineering}: Extract features which are interpretable, for subsequent XAI integration.
   \item \textbf{Balancing \& splitting}: Combat the effects of inherent class imbalance whilst aiming to prevent data leakage.

@@ -8,7 +8,7 @@ The architecture will combine the interpretable and high-performance aspects in 
 \begin{itemize}
   \item \textbf{Random forest}:
   \begin{itemize}
-    \item Selected for its easy understability through feature importance scores \citep{gupta2021novel}.
+    \item Selected for its easy interpretability through feature importance scores \citep{gupta2021novel}.
     \item Is able to handle a multitude of feature types, like numerical and categorical data, without much preprocessing.
     \item With proper tuning against phishing datasets, it can achieve around 99.57\% accuracy \citep{kapoor2024comparative}.
     \item Is known to struggle with semantic patterns in novel attacks.
@@ -28,7 +28,7 @@ The architecture will combine the interpretable and high-performance aspects in 
 \begin{itemize}
   \item \textbf{Weight allocation}:
   \begin{itemize}
-    \item \textit{Random forest}: 40\% weight, with a priority for interpretability in a a security-context.
+    \item \textit{Random forest}: 40\% weight, with a priority for interpretability in a security-context.
     \item \textit{DistilBERT}: 60\% weight, utilising its well-performing capabilities to represent text for more complex linguistic patterns.
     \item Ratio is in agreement with \cite{alzahrani2024explainable}'s findings for the best balance in hybrid weighting.
   \end{itemize}
@@ -36,7 +36,7 @@ The architecture will combine the interpretable and high-performance aspects in 
   \begin{equation}
     P_{final}(phishing) = 0.4 \cdot P_{RF} + 0.6 \cdot P_{BERT}
   \end{equation}
-  Where \( P \) represents the model's phishing probaility output.
+  Where \( P \) represents the model's phishing probability output.
   \item \textbf{Fallback mechanism}:
   \begin{itemize}
     \item If there is a slight disagreement between models, then default to the prediction made by DistilBERT -- reduces false negatives.

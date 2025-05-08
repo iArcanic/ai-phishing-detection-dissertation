@@ -1,15 +1,15 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/core-machine-learning-frameworks.tex
 
 \subsubsection*{Core machine learning frameworks}
-Optimised frameworks, which have the capability to balance both performance and explainability, are chosen for this implementation, helping to fulfill \hyperref[objective-2]{\uline{\textbf{Objective 2}}} and \hyperref[objective-3]{\uline{\textbf{Objective 3}}}. It is important to note that the selection of these tools align with reccomendations from works by \cite{shirazi2022towards} and \cite{gupta2021novel}.\newline
+Optimised frameworks, which have the capability to balance both performance and explainability, are chosen for this implementation, helping to fulfill \hyperref[objective-2]{\uline{\textbf{Objective 2}}} and \hyperref[objective-3]{\uline{\textbf{Objective 3}}}. It is important to note that the selection of these tools align with recommendations from works by \cite{shirazi2022towards} and \cite{gupta2021novel}.\newline
 
-\noindent The "\texttt{sckit-learn}" Python library will prove to be useful for the random forest classifier, specifically boasting XAI-compatible packages. It obscures the complex implementations behind such models and provides a base classifier to futher configure upon.
+\noindent The "\texttt{sckit-learn}" Python library will prove to be useful for the random forest classifier, specifically boasting XAI-compatible packages. It obscures the complex implementations behind such models and provides a base classifier to further configure upon.
 
 \begin{itemize}
   \item \textbf{Key features}:
   \begin{itemize}
     \item Supports SHAP integration natively with the "\texttt{TreeExplainer}" extension, for global feature explanations \citep{lundberg2017unified}.
-    \item Can efficiently handle numerous types of features, such as numerical and categorial, without the need for one-hot encoding.
+    \item Can efficiently handle numerous types of features, such as numerical and categorical, without the need for one-hot encoding.
     \item Allows for class-weighted training, i.e. "\texttt{class\_weight='balanced'}", as a countermeasure for dataset imbalances.
   \end{itemize}
   \item \textbf{Phishing-specific configurations}:
@@ -30,7 +30,7 @@ Optimised frameworks, which have the capability to balance both performance and 
   \item \textbf{Phishing-specific configurations}:
   \begin{itemize}
     \item Sequence length needs to be cut down to 256 tokens. This covers 95\% of phishing emails, as per \cite{sanchez2022phishing}.
-    \item Fine-tuning can be stablised by setting the learning warmup rate over the first 10\% of steps.
+    \item Fine-tuning can be stabilised by setting the learning warmup rate over the first 10\% of steps.
   \end{itemize}
 \end{itemize}
 

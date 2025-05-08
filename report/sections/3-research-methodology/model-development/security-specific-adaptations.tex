@@ -1,17 +1,17 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/security-specific-adaptations.tex
 
 \subsubsection*{Security-specific adaptations}
-It is important to secure the model, and implement the necessary defences against typical evasion tecniques that attackers commonly use. This should not in any form impact the explainability methods being integrated into the model. Methods are drawn from \cite{kapoor2024comparative} and \cite{atlam2022business}, with XAI compatability in mind.\newline
+It is important to secure the model, and implement the necessary defences against typical evasion techniques that attackers commonly use. This should not in any form impact the explainability methods being integrated into the model. Methods are drawn from \cite{kapoor2024comparative} and \cite{atlam2022business}, with XAI compatability in mind.\newline
 
 \noindent Adversarial attacks, through text manipulation, are the main tactics attackers attempt, in a means to bypass phishing filters:
 
 \begin{itemize}
-  \item \textbf{Input pertrubation defense}:
+  \item \textbf{Input perturbation defense}:
   \begin{itemize}
     \item \textit{Text attacks}: Training data is augmented with:
     \begin{itemize}
       \item Synonym swaps, like "urgent" $\Rightarrow$ "immediate" \citep{greco2023explaining}.
-      \item Homoglyph replacements, such as "paypal" $\Rightarrow$ "paypal".
+      \item Homoglyph replacements, such as "Paypal" $\Rightarrow$ "paypal".
       \item Case randomisation, i.e. "SECURE" $\Rightarrow$ "SeCuRe".
     \end{itemize}
     \item \textit{URL attacks}: Generates adversarial URLs through:
@@ -32,7 +32,7 @@ It is important to secure the model, and implement the necessary defences agains
 \begin{itemize}
   \item \textbf{Risk-adaptive classification}:
   \begin{itemize}
-    \item Decisions should be adjusuted on fine-tune thresholds, which are bsed upon:
+    \item Decisions should be adjusted on fine-tune thresholds, which are bsed upon:
     \begin{itemize}
       \item Feature risk scores, for e.g., a mismatched domain adding to the overall risk score.
       \item Have a time context, meaning a higher sensitivity during prime attack hours \citep{vishwanath2011people}.

@@ -1,10 +1,10 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/introduction.tex
 
-This section documents the tools required for all the practical implementation steps detailed previously. The tools used allow for the XAI phishing detection system to be developed systematically and efficienty, ensures reproducibility, and addresses the security and computational limitations identified as part of \hyperref[research-gap-3]{\uline{\textbf{Research Gap 3}}}. The careful selection of the following tools keep in mind:
+This section documents the tools required for all the practical implementation steps detailed previously. The tools used allow for the XAI phishing detection system to be developed systematically and efficiency, ensures reproducibility, and addresses the security and computational limitations identified as part of \hyperref[research-gap-3]{\uline{\textbf{Research Gap 3}}}. The careful selection of the following tools keep in mind:
 
 \begin{itemize}
   \item \textbf{Explainability integration}: The libraries used will have native SHAP and LIME support, i.e. the "\texttt{shap}" and "\texttt{lime}" Python libraries, to meet XAI design goals.
-  \item \textbf{Security compliance}: Libraires with security features will be leveraged to ensure GDPR compliance, especially when it comes to handling user data. Practically, this would mean "\texttt{SpaCy}" library for redaction and the "\texttt{flas-security}" component for UI access control.
+  \item \textbf{Security compliance}: Libraries with security features will be leveraged to ensure GDPR compliance, especially when it comes to handling user data. Practically, this would mean "\texttt{SpaCy}" library for redaction and the "\texttt{flas-security}" component for UI access control.
   \item \textbf{Efficiency}: Lightweight frameworks, like DistilBERT and Flask, are chosen to allow for real-time and practical deployment, as seen in \cite{kapoor2024comparative}.
 \end{itemize}
 

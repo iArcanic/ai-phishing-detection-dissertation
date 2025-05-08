@@ -8,7 +8,7 @@ Efficient, purposeful, and thorough feature engineering is important to differen
   \begin{itemize}
     \item \textit{Embedding vectors}:
     \begin{itemize}
-      \item 768-dimensional BERT embeddings should be generated via the \texttt{transformers} Python library for email content, with the aim of maintaing a semantic context \citep{shirazi2022towards}.
+      \item 768-dimensional BERT embeddings should be generated via the \texttt{transformers} Python library for email content, with the aim of maintaining a semantic context \citep{shirazi2022towards}.
       \item This can be supplemented with domain-specific tuning on phishing-specific language structures, e.g. clusters of "urgent action required".
     \end{itemize}
     \item \textit{Stylometric features}:
@@ -27,12 +27,12 @@ Efficient, purposeful, and thorough feature engineering is important to differen
     \item \textit{Lexical features}:
     \begin{itemize}
       \item Check for length, i.e. number of subdomains, path depth, etc.
-      \item Use entropy scores to analyse character distrivution and for suspicious, random domains \citep{palaniappan2020malicious}.
+      \item Use entropy scores to analyse character distribution and for suspicious, random domains \citep{palaniappan2020malicious}.
     \end{itemize}
     \item \textit{Network features}:
     \begin{itemize}
       \item Use WHOIS data to rate domains based on certain rules (e.g. a domain being registered less than 30 days ago), via the \texttt{python-whois} Python library.
-      \item Validate any cerficiates, with those being self-signed increasing the likelihood of the email being suspicious.
+      \item Validate any certificates, with those being self-signed increasing the likelihood of the email being suspicious.
     \end{itemize}
     \item \textit{Behavioral features}:
     \begin{itemize}
@@ -58,7 +58,7 @@ Efficient, purposeful, and thorough feature engineering is important to differen
 \noindent Some additional implementation notes to consider: 
 
 \begin{itemize}
-  \item \textbf{Feature scaling}: Apply Min-Max normalisation for neural networks, but don'y apply scaling for tree-based models (i.e. random forest or decision trees).
+  \item \textbf{Feature scaling}: Apply Min-Max normalisation for neural networks, but don't apply scaling for tree-based models (i.e. random forest or decision trees).
   \item \textbf{Dimensionality}: A total of about 150-200 features after selection.
   \item \textbf{Reproducibility}: A frozen feature extraction pipeline that is versioned with a DVC, like GitHub.
 \end{itemize}

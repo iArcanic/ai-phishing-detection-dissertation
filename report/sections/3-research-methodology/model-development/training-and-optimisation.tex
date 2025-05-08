@@ -12,7 +12,7 @@ The training pipeline for this implementation is particulatly designed with resp
     \begin{itemize}
       \item General phishing texts from PhishTank URLs and Enron phishing emails.
       \item Set the task to a binary classification task, where the states are phishing or legitimate emails.
-      \item Set the hyparameters to: 3 epochs, \texttt{lr = 2e-5}, and \texttt{batch = 32}.
+      \item Set the hyperparameters to: 3 epochs, \texttt{lr = 2e-5}, and \texttt{batch = 32}.
     \end{itemize}
     \item For random forest, train on structured features:
     \begin{itemize}
@@ -39,7 +39,7 @@ The training pipeline for this implementation is particulatly designed with resp
   \begin{itemize}
     \item For random forest, set the \texttt{max\_depth} from $3 - 20$ and texttt{n\_estimators} from $50 - 500$.
     \item For DistilBERT, set the learning rate from $1e - 6$ to $5e - 5$, and dropout rate from $0.1 - 0.4$.
-  \item \textbf{XAI-guided pruning}: Removes features that rank on SHAP importance of less than $0.01$, helping to reduce unecessary noise.
+  \item \textbf{XAI-guided pruning}: Removes features that rank on SHAP importance of less than $0.01$, helping to reduce unnecessary noise.
   \item \textbf{Limitations}: Maintains a $\geq$95\% of the original F2-score during pruning, so there is an unavoidable 5\% loss.
   \end{itemize}
 \end{itemize}
