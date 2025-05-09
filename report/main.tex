@@ -38,9 +38,17 @@
 
   % 1: Introduction
   \section{Introduction}\label{sec:1-introduction}
+
+  % 1.1: Background
   \input{sections/1-introduction/background}
+
+  % 1.2: Objectives
   \input{sections/1-introduction/objectives}
+
+  % 1.3: Research questions
   \input{sections/1-introduction/research-questions}
+
+  % 1.4: Structure
   \input{sections/1-introduction/structure}
   \newpage
 
@@ -48,14 +56,14 @@
   \section{Literature review}\label{sec:2-literature-review}
   \input{sections/2-literature-review/introduction}
 
-  % AI-based phishing detection models
+  % 2.1: AI-based phishing detection models
   \subsection{AI-based phishing detection models}
   \input{sections/2-literature-review/ai-based-phishing-detection-models/limitations-of-traditional-phishing-detection}
   \input{sections/2-literature-review/ai-based-phishing-detection-models/ml-models-for-phishing-detection}
   \input{sections/2-literature-review/ai-based-phishing-detection-models/dl-and-transformer-based-models}
   \input{sections/2-literature-review/ai-based-phishing-detection-models/practical-benefits-and-future-potential}
 
-  % Challenges in AI-based phishing detection
+  % 2.2: Challenges in AI-based phishing detection
   \subsection{Challenges in AI-based phishing detection}
   \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/dataset-and-model-performance-issues}
   \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/adversarial-evolution-and-scalability}
@@ -63,7 +71,7 @@
   \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/interpretability-and-xai-challenges}
   \input{sections/2-literature-review/challenges-in-ai-based-phishing-detection/ethical-and-human-factor-concerns}
 
-  % XAI in the context of phishing detection
+  % 2.3: XAI in the context of phishing detection
   \subsection{XAI in the context of phishing detection}
   \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/introduction-to-xai-and-its-importance}
   \input{sections/2-literature-review/xai-in-the-context-of-phishing-detection/user-centric-challenges-and-psychological-factors}
@@ -73,7 +81,7 @@
 
   \newpage
 
-  % Research gaps
+  % 2.5: Research gaps
   \subsection{Research gaps}
   \input{sections/2-literature-review/research-gaps/introduction}
   \input{sections/2-literature-review/research-gaps/research-gap-1}
@@ -89,7 +97,7 @@
 
   \newpage
 
-  % Justification for this study
+  % 2.6: Justification for this study
   \subsection{Justification for this study}
   \input{sections/2-literature-review/justification-for-this-study/introduction}
   \input{sections/2-literature-review/justification-for-this-study/justification-1}
@@ -99,77 +107,57 @@
   \input{sections/2-literature-review/justification-for-this-study/justification-5}
   \input{sections/2-literature-review/justification-for-this-study/theoretical-and-practical-contributions}
   \newpage
-  \input{sections/2-literature-review/summary-of-existing-phishing-detection-techniques}
-  \newpage
-  \input{sections/2-literature-review/summary-of-xai-techniques}
-
-  \newpage
 
   % 3: Research methodology
   \section{Research methodology}\label{sec:3-research-methodology}
   \input{sections/3-research-methodology/introduction}
 
-  % Datasets
+  % 3.1: Datasets
   \subsection{Datasets}
   \input{sections/3-research-methodology/datasets/introduction}
   \input{sections/3-research-methodology/datasets/sources-to-consider}
   \input{sections/3-research-methodology/datasets/strengths-and-limitations}
   \input{sections/3-research-methodology/datasets/selection-criteria}
   \input{sections/3-research-methodology/datasets/final-selection-and-justification}
-  \newpage
-  \input{sections/3-research-methodology/datasets/summary-of-datasets}
 
   \newpage
 
-  % Data preprocessing
+  % 3.2: Data preprocessing
   \subsection{Data preprocessing}
   \input{sections/3-research-methodology/data-preprocessing/introduction}
   \newpage
   \input{sections/3-research-methodology/data-preprocessing/data-cleaning-and-normalisation}
   \newpage
-  \input{sections/3-research-methodology/data-preprocessing/summary-of-data-cleaning-operations}
-  \newpage
   \input{sections/3-research-methodology/data-preprocessing/text-specific-processing}
-  \newpage
-  \input{sections/3-research-methodology/data-preprocessing/text-processing-pipeline}
   \newpage
   \input{sections/3-research-methodology/data-preprocessing/feature-engineering}
   \newpage
-  \input{sections/3-research-methodology/data-preprocessing/feature-taxonomy}
-  \newpage
   \input{sections/3-research-methodology/data-preprocessing/dataset-balancing-and-splitting}
   \newpage
-  \input{sections/3-research-methodology/data-preprocessing/data-distribution}
 
-  \newpage
-
-  % Model development
+  % 3.3: Model development
   \subsection{Model development}
   \input{sections/3-research-methodology/model-development/introduction}
   \newpage
   \input{sections/3-research-methodology/model-development/model-selection-and-hybrid-architecture}
   \input{sections/3-research-methodology/model-development/xai-integration-design}
   \newpage
-  \input{sections/3-research-methodology/model-development/xai-interface}
-  \newpage
   \input{sections/3-research-methodology/model-development/training-and-optimisation}
   \input{sections/3-research-methodology/model-development/security-specific-adaptations}
 
-  % Evaluation framework
+  % 3.4: Evaluation framework
   \subsection{Evaluation framework}
   \input{sections/3-research-methodology/evaluation-framework/introduction}
   \newpage
   \input{sections/3-research-methodology/evaluation-framework/model-performance-metrics}
   \input{sections/3-research-methodology/evaluation-framework/explainability-evaluation}
   \newpage
-  \input{sections/3-research-methodology/evaluation-framework/xai-evaluation-targets}
-  \newpage
   \input{sections/3-research-methodology/evaluation-framework/comparative-analysis}
   \input{sections/3-research-methodology/evaluation-framework/adversarial-testing}
 
   \newpage
 
-  % Implementation tools
+  % 3.5: Implementation tools
   \subsection{Implementation tools}
   \input{sections/3-research-methodology/implementation-tools/introduction}
   \newpage
@@ -178,9 +166,6 @@
   \input{sections/3-research-methodology/implementation-tools/data-processing-pipeline}
   \input{sections/3-research-methodology/implementation-tools/user-interface-components}
   \input{sections/3-research-methodology/implementation-tools/reproducibility-management}
-  \newpage
-  \input{sections/3-research-methodology/implementation-tools/summary-of-reproducibility-tools}
-
   \newpage
 
   % 4: Results
