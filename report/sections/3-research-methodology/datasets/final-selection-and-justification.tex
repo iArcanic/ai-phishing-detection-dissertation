@@ -4,21 +4,21 @@
 From the evaluation above, the selected datasets that were chosen for this research to address the varied nature of phishing attackers are detailed below. A breakdown is provided, that includes their synergies, and close alignment with the identified research gaps.
 
 \begin{itemize}
-  \item \textbf{Primary dataset: Enron + CEAS 2008}
+  \item \textbf{Primary training dataset: Enron}
   \begin{itemize}
-    \item Enron's corporate emails provide varied range, in terms of linguistics, for NLP models to pick up on.
-    \item CEAS 2008's 25,000 emails mitigate Enron's weakness of having more modern threats.
-    \item Both sets will be combined with label-aware concatenation.
-    \item Resolves dataset bias, by supplementing Enron with better phishing email examples from CEAS (\hyperref[research-gap-5]{\uline{\textbf{Research Gap 5}}}).
+    \item Enron's corporate emails provide varied range, in terms of linguistics.
   \end{itemize}
-  \item \textbf{Testing dataset 1: SpamAssassin}
+  \item \textbf{Secondary training dataset: SpamAssassin}
   \begin{itemize}
     \item Consists of phishing and spam subsets to serve as a way to test model discrimination.
     \item Helps to reduce the risk of overfitting, as its limited to phishing-only data.
-    \item Used only for validation purposes, and to evaluate precision, i.e. avoid the misclassification of spam as phishing.
     \item Improves the real-world applicability of the model (\hyperref[research-gap-4]{\uline{\textbf{Research Gap 4}}}).
   \end{itemize}
-  \item \textbf{Testing dataset 2: Nigerian Fraud}
+\item \textbf{Primary testing dataset: Nazario Spam}:
+  \begin{itemize}
+    \item 
+  \end{itemize}
+  \item \textbf{Secondary testing dataset: Nigerian Fraud}
   \begin{itemize}
     \item Tests the models resilience on psychological manipulation and social engineering tactics, like phrases of urgency.
     \item Can serve as an adversarial subset, with 100 or so samples being injected into the validation data.
