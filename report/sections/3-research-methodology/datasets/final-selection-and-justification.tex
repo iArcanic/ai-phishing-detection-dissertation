@@ -6,23 +6,29 @@ From the evaluation above, the selected datasets that were chosen for this resea
 \begin{itemize}
   \item \textbf{Primary training dataset: Enron}
   \begin{itemize}
-    \item Enron's corporate emails provide varied range, in terms of linguistics.
+    \item Served as the primary source of legitimate ("ham", label 0) emails, and was split into training, validation, and internal sets.
+    \item Chosen for its large value of real-world corporate emails, which are relatively preprocessed already and support a format for generating a "ham" corpus.
   \end{itemize}
-  \item \textbf{Secondary training dataset: SpamAssassin}
+  \item \textbf{Secondary training dataset: CEAS 2008}
   \begin{itemize}
-    \item Consists of phishing and spam subsets to serve as a way to test model discrimination.
-    \item Helps to reduce the risk of overfitting, as its limited to phishing-only data.
-    \item Improves the real-world applicability of the model (\hyperref[research-gap-4]{\uline{\textbf{Research Gap 4}}}).
+    \item Served as a primary source for phishing/spam emails, i.e. label 1, and was split into training, validation, and internal sets.
+    \item Has clearly identifiable labels and columns compared to its raw TREC format, and it's also a known corpus for spam/phishing, providing plenty of relevant examples for malicious emails.
   \end{itemize}
-\item \textbf{Primary testing dataset: Nazario Spam}:
+  \item \textbf{Primary independent testing dataset: SpamAssassin}:
   \begin{itemize}
-    \item 
+    \item The spam components served as an independent test set for evaluating model performance on general spam/phishing emails (with label 1), which are unseen during training.
+    \item The ham components had the role of testing the models' ability to correctly classify legitimate emails (label 0), with a "hard" and "easy" set.
+    \item Chosen due to its wide recognition in its benchmarking for spam filtering, with distinct separation between ham and spam categories, as well as a further division in terms of difficulty.
+    \item Robust and well-labelled data, suitable for testing.
   \end{itemize}
-  \item \textbf{Secondary testing dataset: Nigerian Fraud}
+  \item \textbf{Secondary independent testing dataset: Nigerian Fraud}
   \begin{itemize}
-    \item Tests the models resilience on psychological manipulation and social engineering tactics, like phrases of urgency.
-    \item Can serve as an adversarial subset, with 100 or so samples being injected into the validation data.
-    \item Allows the evaluation of fidelity, e.g. if XAI's explanations pick up on the phrases of urgency.
-    \item Strengths user-centric XAI explanations (\hyperref[research-gap-2]{\uline{\textbf{Research Gap 2}}}).
+    \item Another specialised independent test set to to evaluate the model's performance on a specific type of phishing email tactic, i.e. the "419 scam" (label 1).
+    \item Utilised for its focus on social engineering tactics to test models' resilience to distinct attacks and psychological language manipulation.
+  \end{itemize}
+  \item \textbf{Tertiary independent testing dataset: Nazario Spam}:
+  \begin{itemize}
+    \item The final independent test used, containing purely of phishing emails (label 1).
+    \item Although older (2004-2007), its a collation of focused phishing emails to test th emodel on a generalisation of different phishing attacks.
   \end{itemize}
 \end{itemize}
