@@ -1,0 +1,8 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/data-preprocessing/email-data-loading-parsing-and-cleaning.tex
+
+\subsubsection*{Email data loading, parsing, and cleaning}
+When preprocessing phishing data, it requires domain-specific cleaning tactics to ensure that attack signatures are still intact when removing external noise. Here, both email and URL preprocessing are addressed, with best practices from studies such from \cite{zamir2020phishing} and \cite{ahmad2024across}.\newline
+
+\noindent Emails from the selected datasets are subsquently preprocessed to extract only usable textual elements. In the selected datasets, it's identified that they have specific columns relating to the email body and subject. For the Enron corpus, the raw email content was first parsed to only derive the "\texttt{message}" column. The SpamAssassin corpus however consisted of individual email files that needed to each be analysed in turn, whilst the Nigerian Fraud data consisted of a singular test file containing multiple emails.\newline
+
+\noindent A primary text cleaning function ("\texttt{clean\_text\_content}"), utilised for each dataset, was used, and this used BeautifulSoup to remove tags, converted to lowercase, used NFKC Unicode normalisation, and regular expression-based processing to handle URLs, email addresses, and whitespaces. Specific datasets however needed this general function to have additional preprocessing lines, for the columns they come with by defailt. Additionaly, some datasets need to have a less aggressive version of this function, such as Nigerian Fraud, to preserve social engineering elements.

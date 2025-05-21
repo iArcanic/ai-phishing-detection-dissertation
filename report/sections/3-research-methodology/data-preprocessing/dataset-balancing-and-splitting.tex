@@ -1,50 +1,6 @@
 % ai-phishing-detection-dissertation/report/sections/3-research-methodology/data-preprocessing/dataset-balancing-and-splitting.tex
 
-\subsubsection*{Dataset balancing and splitting}
-As mentioned previously, the performance of an ML algortithm largely depends upon the quality of the data its trained upon. Unfortnately, a lot of datasets unintentionally exhibit sever class imbalance, often in less than 5\% of phishing samples. To combat this, this study uses these following strategies:
+\subsubsection*{Training data and assembly splitting}
+The primary training data, consisting of the Enron and CEAS 2008 datasets, were combined to form a corpus of legitimate ("ham") emails from Enron and phishing ("spam") from CEAS 2008. The total size of the corpus resulted in 40,000 emails, with a reasonable balance between ham and phishing classes (1:1 ratio almost). Oversampling techniques like SMOTE were not necessarily required in terms of class balancing for the initial training process. SMOTE was definitely considered as a viable option to balance classes due to insufficient data.\newline
 
-\begin{itemize}
-  \item \textbf{Synthetic Minority Oversampling (SMOTE)}:
-  \begin{itemize}
-    \item Synthetic phishing samples can be generated in the feature space with k-NN, where $k = 5$. 
-    \item This should only be applied to training data to prevent leakages \citep{ahmad2024across}.
-    \item Minority-class patterns, which are critical and under-represented, are preserved with SMOTE.
-  \end{itemize}
-  \item \textbf{Strategic undersampling}:
-  \begin{itemize}
-    \item Majority classes should be clustered (legitimate emails) with k-means, where here, $k = 10$. Each cluster should be sampled proportionally \citep{zamir2020phishing}.
-    \item Allows for classes to retain their diversity, especially for legitimate traffic.
-  \end{itemize}
-  \item \textbf{Cost-sensitive training}:
-  \begin{itemize}
-    \item Class weights should be assigned, that are inversely proportional to frequency (e.g., phishing: 0.9, legitimate: 0.1) during model training \citep{gupta2021novel}.
-  \end{itemize}
-\end{itemize}
-
-\noindent Furthermore, the data will follow a three-tier partitioning set up to allow for a rigorous evaluation process whilst simulating real-world conditions:
-
-\begin{itemize}
-  \item \textbf{Time-aware splitting}
-  \begin{itemize}
-    \item Emails should be sorted by timestamps -- if available.
-    \item Training with 70\% of the oldest data, validation on 15\%, and test on 15\% on the newest \citep{kapoor2024comparative}.
-    \item Can test a model on new and emerging attack methods.
-  \end{itemize}
-  \item \textbf{Stratified splitting (fallback)}:
-  \begin{itemize}
-    \item If timestamps are not available, then a fallback option would be to use stratified sampling to retrain class ratios in all splits.
-    \item Use 10-fold cross-validation for smaller datasets, such as Nigerian Fraud.
-  \end{itemize}
-  \item \textbf{Adversarial hold out set}:
-  \begin{itemize}
-    \item Reserve 5\% of phishing samples from the test set to represent "zero-day" attacks, which are never seen during training nor validation \citep{atlam2022business}.
-  \end{itemize}
-\end{itemize}
-
-\noindent Here are some points that concern the practical implementation of this:
-
-\begin{itemize}
-  \item \textbf{Tooling}: Use "\texttt{imbalanced-learn}" for SMOTE and "\texttt{sckit-learn}" for clustering and/or splitting.
-  \item \textbf{Reproducibility}: Use fixed random seeds (42) for stochastic operations.
-  \item \textbf{Edge cases}: Distribute Nigerian Fraud samples across all splits to test the models responses for social engineering.
-\end{itemize}
+\noindent The combined corpus was then split into three distinct sets, those being: a training set (15\%), a validation set (15\%), and a internal test set (15\%). Such a split was possible with \texttt{scikit-learn}'s "\texttt{train\_test\_split}" function, utilising stratification methods based on the email labels. This was to ensure a consistent class proportion across all the sets.
