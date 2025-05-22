@@ -1,0 +1,21 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/xai-integration.tex
+
+\subsubsection*{XAI integration}
+The core theme of this project is XAI, providing transparency and insight into the decision-making processes of the two trained models. These specific XAI techniques were integrated.
+
+\begin{itemize}
+  \item \textbf{Random forest (SHAP)}:
+  \begin{itemize}
+    \item SHAP was used for this model to explain its predictions using "\texttt{shap.Explainer}", initialised with the trained Random Forest model the the TF-IDF features. This allows for:
+    \begin{itemize}
+      \item \textit{Global explanations}: SHAP summary plots were generated to serve as a visualisation of the overall TF-IDF feature importance (terms/n-grams) across the dataset.
+      \item \textit{Local explanations}: Waterfall plots were generated for individual email predictions, with information on how certain features may (or may not) have contributed to a prediction.
+    \end{itemize}
+  \end{itemize}
+  \item \textbf{DistilBERT (LIME)}:
+  \begin{itemize}
+    \item LIME for the deep learning model was used for local, word-level explanations with the "\texttt{LimeTextExplainer}" function from the "\texttt{lime}" library.
+    \item A predictor function was required to allow LIME to get probability predictions from the DistilBERT model for text samples.
+    \item Words were highlighted via these LIME explanations from the input text that contributed most to the final model's classification for each individual email.
+  \end{itemize}
+\end{itemize}

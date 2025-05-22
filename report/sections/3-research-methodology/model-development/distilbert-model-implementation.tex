@@ -1,0 +1,24 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/distilbert-model-implementation.tex
+
+\subsubsection*{DistilBERT model implementation}
+In addition to a traditional ensemble learning method, a deep learning approach was considered, particularly a fine-tuned and faster version of BERT, DistilBERT. The aim is to retain the performance of the standard BERT model, but deliver a computationally efficient version that has practical and realistic deployment.
+
+\begin{itemize}
+  \item \textbf{Model choice and input data}:
+  \begin{itemize}
+    \item "\texttt{DistilBertForSequenceClassification}" imported from the Hugging Face "\texttt{transformers}" library served as a base model.
+    \item It was initialised with "\texttt{distilbert-base-uncased}" pre-trained weights.
+    \item The model was directly fine-tuned on cleaned-text data from the training set, i.e. combined email subject and body, from the Enron and CEAS 2008 data.
+  \end{itemize}
+  \item \textbf{Tokenisation}:
+  \begin{itemize}
+    \item The "\texttt{DistilBertTokenizer.from\_pretrained('distilbert-base-uncased')}" was used to convert the text data into tokens.
+    \item A "\texttt{max\_sequence\_length}" of 256 tokens were used, truncating or padding inputs where needed.
+  \end{itemize}
+  \item \textbf{Fine-tuning process}:
+  \begin{itemize}
+    \item Fine-tuning for the model occured for 3 epochs with the AdamW optimiser via ("\texttt{torch.optim.AdamW}") with a $2e-5$ with a batch size of 16.
+    \item A linear learning rate scheduler was employed, "\texttt{get\_linear\_schedule\_with\_warmup}", with a warmup ratio of 0.1.
+    \item Training was performed on a Tesla 4 GPU, standard as part of the Google Colaboratory environment, with performance and training times recorded for each epoch on the validation set.
+  \end{itemize}
+\end{itemize}

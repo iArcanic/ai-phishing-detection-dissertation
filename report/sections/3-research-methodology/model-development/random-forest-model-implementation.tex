@@ -1,0 +1,24 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/model-development/random-forest-model-implementation.tex
+
+\subsubsection*{Random forest model implementation}
+An ensemble learning method known for its good performance for phishing detection and robustness \citep{gupta2021novel} is a Random Forest classifier.
+
+\begin{itemize}
+  \item \textbf{Model choice and features}:
+  \begin{itemize}
+    \item The "\texttt{RandomForestClassifier}" from the "\texttt{sckit-learn}" library was used for a base Random Forest model, and this was taken to be trained upon the TF-IDF features from the data preprocessing stage. This included the combined and cleaned text, i.e. the email subject and body, from the Enron (legitimate) and CEAS 2008 (phishing) training data.
+  \end{itemize}
+  \item \textbf{Training process and hyperparameter tuning}:
+  \begin{itemize}
+    \item The model was initially trained with these following parameters to address class imbalances (if any) and optimise reproducibility:
+    \begin{itemize}
+      \item \texttt{n\_estimators=150}: The number of trees in the forest.
+      \item \texttt{min\_samples\_split=5}: The minimum number of samples required to split an internal node.
+      \item \texttt{min\_samples\_leaf=2}: The minimum number of samples required to be at a leaf node.
+      \item \texttt{class\_weight='balanced'}: Weights associated with classes.
+      \item \texttt{random\_state=42}: Controls the randomness of the estimator.
+    \end{itemize}
+    \item Performance was further optimised with hyperparameter tuning, with "\texttt{GridSearchCV}" on a small portion of the dataset to tune the listed parameters describe above.
+    \item "\texttt{GridSearchCV}" was fitted and performed a grid search using a 3-fold cross validation process, using the "\texttt{f1\_weighted}" score as the performance metric in selecting the best combination to use.
+  \end{itemize}
+\end{itemize}
