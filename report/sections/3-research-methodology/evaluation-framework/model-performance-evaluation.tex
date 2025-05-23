@@ -1,0 +1,26 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/evaluation-framework/model-performance-evaluation.tex
+
+\subsubsection*{Model performance evaluation}
+A range of standard classification metrics were used to evaluate the Random Forest and DistilBERT models upon. A quantitative assessment in the models ability to distinguish between phishing (label 1) and legitimate (label 0) emails was performed using the following metrics:
+
+\begin{itemize}
+  \item \textbf{Accuracy}: A proportion of correctly classified instances to the total number of instances.
+  \item \textbf{Precision (for the Phishing Class)}: The proportion of emails marked as phishing that are actually phishing, serving as a measurement of the exactness of the phishing predictions.
+  \item \textbf{Recall (for the Phishing Class)}: The proportion of actual phishing emails correctly identified, measuring the completeness and sensitivity of the phishing predictions.
+  \item \textbf{F1-score (for the Phishing Class)}: The harmonic mean of precision and recall, serving as a metric that balances both.
+  \item \textbf{ROC AUC score}: Measures the model's ability to distinguish between classes across all classification metrics.
+  \item \textbf{Classification report}: A detailed report providing a summary of metrics per class.
+  \item \textbf{Confusion matrix}: A table to visualise the performance of a classification model by comparing the predicted and actual labels.
+\end{itemize}
+
+\noindent Model performance was also assessed on two types of datasets:
+
+\begin{itemize}
+  \item \textbf{Internal test set}: A set, comprising of 15\% of the combined Enron ham and CEAS 2008 phishing corpus, was reserved after the initial data split. It's purpose is to evaluate how well each model performs on a portion of the data from the same distribution it was trained and validated upon.
+  \item \textbf{Independent external test set}: This is to assess the models general performance and robustness for a variety of different email characteristics, sources, and attack tactics. This was evaluated on the following independently processed datasets:
+  \begin{itemize}
+    \item \textit{SpamAssassin Public Corpus}: The "\texttt{easy\_ham}" and "\texttt{hard\_ham}" partitions of the dataset were used for false positive testing on legitimate emails, whilst the "\texttt{spam}" and "\texttt{spam\_2}" portions were used for general performance testing.
+    \item \textit{Nigerian Fraud Dataset}: Test resilience against "419 scam" emails with niche social engineering attacks.
+    \item \textit{Nazario Phishing Corpus}: Used to test the performance of another known corpus of distinct phishing emails.
+  \end{itemize}
+\end{itemize}

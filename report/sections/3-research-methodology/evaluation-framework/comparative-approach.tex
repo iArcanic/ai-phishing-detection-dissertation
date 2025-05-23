@@ -1,0 +1,10 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/evaluation-framework/comparative-approach.tex
+
+\subsubsection*{Comparative approach}
+A comparative analysis was performed between the two implemented models, i.e. the Random Forest classifier (with TF-IDF features) and the DistilBERT fine-tuned model. The comparison focused on these following areas:
+
+\begin{itemize}
+  \item \textbf{Predictive performance}: Directly compare the accuracy, precision, recall, F1-score, and ROC AUC scores on both the internal test set and across the range of independent external test sets.
+  \item \textbf{Nature of explanations}: Qualitatively compare the types of insights from the SHAP explanations from Random Forest against the LIME explanations from DistilBERT, including the granularity of their explanations on a feature-level and word-level basis, their inherent interpretability, and how versatile they are for different technical levels of users, such as an end-user compared to a security analyst.
+  \item \textbf{Overall suitability}: Observe the trade-offs, and come to a conclusion in terms of the practicality of each model like the training time, computational resources needed, implementation complexity, and explanation actionability.
+\end{itemize}
