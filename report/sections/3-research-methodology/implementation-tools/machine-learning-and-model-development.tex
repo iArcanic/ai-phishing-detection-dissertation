@@ -1,0 +1,22 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/machine-learning-and-model-development.tex
+
+\subsubsection*{Machine learning model development}
+Sckit-learn ("\texttt{sk-learn}") is the main library for traditional machine learning implementation in Python, providing a wide range of baseline algorithms. Specifically, the following components were used for this project:
+
+\begin{itemize}
+  \item \texttt{TfidfVectorizer}: Converts the cleaned, textual email data into numerical TF-IDF feature vectors for the Random Forest model to work with. Key parameters like \texttt{stop\_words}, \texttt{ngram\_range}, \texttt{max\_df}, \texttt{min\_df} and \texttt{max\_features} were configured to optimise the feature engineering process.
+  \item \texttt{RandomForestClassifier}: Implements a default Random Forest ensemble model for classification tasks and trained on TF-IDF feature vectors as well as the relevant labels (phishing or legitimate).
+  \item \texttt{train\_test\_split}: Splits the combined dataset into a training, testing, and validation set, ensuring that the model is trained on a small proportion of the original data, and reserve the rest to facilitate the evaluation on unseen data.
+  \item \texttt{GridSearchCV}: Performs the process of hyperparameter turning for the Random Forest model, choosing the best combination of model parameters based on a small sample of the validation set.
+  \item \texttt{sklern.metrics}: Calculates performance metrics like accuracy, precision, recall, F1-score, ROC AUC, classification report, and confusion matrices, providing a comprehensive evaluation of the model's performance on the test set.
+\end{itemize}
+
+\noindent Hugging Face ("\texttt{transformers}") is used to implement more complex machine learning models, particularly the DistilBERT model. The following components were used:
+
+\begin{itemize}
+  \item \texttt{DistilBertTokenizerFast}: Used to tokenise the input text data, converting the cleaned email text content into a suitable format, making sure to handle special tokens, padding, and truncation.
+  \item \texttt{DistilBertForSequenceClassification}: Provides a default, pre-trained DistilBERT model architecture template, which was then further refined with fine-tuning on the email dataset.
+  \item \texttt{get\_linear\_schedule\_with\_warmup}: Manage the learning rate during the fine-tuning process, ensuring efficient model convergence.
+\end{itemize}
+
+\noindent PyTorch ("\texttt{torch}") serves as the deep learning framework for which the DistilBERT model was fine-tuned upon. This includes defining custom "\texttt{Dataset}" and "\texttt{DataLoader}" classes to handle the tokenised email data, including the training and evaluation loops, efficiently on GPU resources. Specially the "\texttt{torch.optim.AdamW}" was used, which is a popular optimisation algorithm for training deep learning models, especially for transformer-based models like DistilBERT.

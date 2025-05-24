@@ -1,0 +1,8 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/xai.tex
+
+\subsubsection*{XAI}
+
+\begin{itemize}
+  \item \textbf{SHAP} \textbf{(}\texttt{shap}\textbf{)}: Used to generate explanations for the Random Forest model via \texttt{shap.Explainer}, and provide SHAP values, allowing for subsequent summary plots for global feature importance (through TF-IDF terms) and waterfall or force plots for local instance explanations.
+  \item \textbf{LIME} \textbf{(}\texttt{lime}\textbf{)}: Generated local, human-interpretable explanations for more complex models, such as DistilBERT in this case. The \texttt{LimeTextExplainer} identified words in the input text that contributes to the model's classification, providing insights behind model's decision-making process.
+\end{itemize}

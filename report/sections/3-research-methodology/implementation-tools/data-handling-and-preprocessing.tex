@@ -1,0 +1,12 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/data-handling-and-preprocessing.tex
+
+\subsubsection*{Data handling and preprocessing}
+
+\begin{itemize}
+  \item \textbf{Pandas}: Powerful library used for data manipulation, loading CSV files, data clearning, and data restructuring into DataFrames for easier, subsequent handling.
+  \item \textbf{NumPy}: Supports numerical operations as well as array manipulations, essential for dealing with outputs from machine learning libraries.
+  \item \textbf{Python} "\texttt{email}" \textbf{module}: Used to parse raw email files if a corpus includes them, as well as raw email content strings to extract headers, body, and attachments.
+  \item \texttt{BeautifulSoup4} \textbf{(from} \texttt{bs4}\textbf{)}: Utilised for parsing HTML content in emails, while allowing for extraction of text with ignorance to HTML tags.
+  \item \texttt{re} \textbf{(Regular Expressions)}: Python's in-built \texttt{re} module for processing text data and perform cleaning operations, like removing URLs, email addresses, unwanted characters, and whitespace.
+  \item \texttt{unicodedata}: Python's in-built module for Unicode NFKC normalisation to ensure consistent text representation.
+\end{itemize}

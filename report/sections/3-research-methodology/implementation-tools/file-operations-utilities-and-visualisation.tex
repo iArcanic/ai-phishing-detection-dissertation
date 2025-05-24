@@ -1,0 +1,12 @@
+% ai-phishing-detection-dissertation/report/sections/3-research-methodology/implementation-tools/file-operations-utilities-and-visualisation.tex
+
+\subsubsection*{File operations, utilities and visualisation}
+
+\begin{itemize}
+  \item \texttt{os}: Pythons built-in library for interacting with the file system, checking for paths and managing directories.
+  \item \texttt{joblib}: Used to save and load Python objects, in this case, the trained Random Forest and the fitted TF-IDF vectoriser.
+  \item \texttt{scipy.sparse}: Handle "\texttt{.npz}" files to save and load sparse TF-IDF feature matrices.
+  \item \texttt{gdown}: Used to download datasets and saved model files from Google Drive directly into the Colab runtime instance.
+  \item \texttt{tarfile} / \texttt{zipfile}: Python modules for extracting compressed files, such as dataset archives or model directories.
+  \item \texttt{matplotlib} and \texttt{seaborn}: Generates visualisations, including plots for EDA, displaying confusion matrices, and visualising feature importances. XAI explanations for SHAP and LIME also leverage these libraries for visual outputs of their plots.
+\end{itemize}
