@@ -166,6 +166,43 @@
 
   % 4: Results
   \section{Results}\label{sec:4-results}
+  \input{sections/4-results/introduction}
+
+  % 4.1: Random Forest model performance
+  \subsection{Random Forest model performance}
+  \input{sections/4-results/random-forest-model-performance/performance-on-internal-test-set}
+  \input{sections/4-results/random-forest-model-performance/performance-on-independent-test-sets}
+
+  \newpage
+
+  % 4.2: XAI for Random Forest using SHAP
+  \subsection{XAI for Random Forest using SHAP}
+  \input{sections/4-results/xai-for-random-forest-using-shap/global-feature-importance}
+  \input{sections/4-results/xai-for-random-forest-using-shap/local-explanations-instance-level}
+
+  \newpage
+
+  % 4.3: DistilBERT model performance
+  \subsection{DistilBERT model performance}
+  \input{sections/4-results/distilbert-model-performance/performance-on-internal-test-set}
+  \input{sections/4-results/distilbert-model-performance/performance-on-independent-test-sets}
+
+  \newpage
+
+  % 4.4: XAI for DistilBERT using LIME
+  \subsection{XAI for DistilBERT using LIME}
+  \input{sections/4-results/xai-for-distilbert-using-lime/local-explanations-instance-level}
+
+  \newpage
+
+  % 4.5: Comparative performance summary
+  \input{sections/4-results/comparative-performance-summary}
+
+  \newpage
+
+  % 4.6: User feedback on XAI explanations
+  \input{sections/4-results/user-feedback-on-xai-explanations}
+
   \newpage
 
   % 5: Discussion
