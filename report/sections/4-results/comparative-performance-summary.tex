@@ -1,3 +1,40 @@
 % ai-phishing-detection-dissertation/report/sections/4-results/conparative-performance-summary.tex
 
 \subsection{Comparative performance summary}
+A direct comparison between both the Random Forest and DistilBERT model will be presented and summarised. The main aim of this comparison is to focus on how the performance on the internal test set from the combined training corpus as well as their generalisation ability on independent data sources. The below table provides a side-by-side comparison of these metrics, with specific attention weighted F1-scores and accuracies.
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|X|X|X|}
+\hline
+\textbf{Metric / Dataset} & \textbf{Random Forest} & \textbf{DistilBERT} \\
+\hline
+\textbf{Internal Test Set (Enron+CEAS Split)} & & \\
+\hline
+Accuracy & \texttt{0.9815} & \texttt{0.9973} \\
+F1-Score (Phishing, Label 1) & \texttt{0.9824} & \texttt{0.9974} \\
+ROC AUC & \texttt{0.9988} & \texttt{1.0000} \\
+\hline
+\textbf{Independent Test Set: Nazario Phishing} & & \\
+\hline
+Accuracy & \texttt{0.0730} & \texttt{0.3773} \\
+F1-Score (Phishing, Label 1) & \texttt{0.1361} & \texttt{0.5479} \\
+Recall (Phishing, Label 1) & \texttt{0.0730} & \texttt{0.3773} \\
+\hline
+\textbf{Independent Test Set: Nigerian Fraud} & & \\
+\hline
+Accuracy & \texttt{0.0261} & \texttt{0.3175} \\
+F1-Score (Phishing, Label 1) & \texttt{0.0510} & \texttt{0.4820} \\
+Recall (Phishing, Label 1) & \texttt{0.0261} & \texttt{0.3175} \\
+\hline
+\textbf{Independent Test Set: SpamAssassin Spam/Phish} & & \\
+\hline
+Accuracy & \texttt{0.1741} & \texttt{0.2827} \\
+F1-Score (Phishing, Label 1) & \texttt{0.2965} & \texttt{0.4408} \\
+Recall (Phishing, Label 1) & \texttt{0.1741} & \texttt{0.2827} \\
+\hline
+\end{tabularx}
+\caption{Comparison of Random Forest and DistilBERT on the internal and external datasets}
+\end{table}
+
+\noindent There is an exceptionally high performance observed on the internal test set, with DistilBERT achieving near perfect scores on all metrics outperforming Random Forest. However when evaluated on independent test sets consisting of either entirely phishing or spam emails. Both models did not perform well in their overall accuracy and F1-scores here for phishing classes, although precision was high with low recall. But on the more challenging external datasets, DistilBERT achieved higher weighted F1-scores and recall values than Random Forest, performing relatively better -- whilst still limited. Both models missed out on a large proportion of actual phishing emails to be marked as "spam".
