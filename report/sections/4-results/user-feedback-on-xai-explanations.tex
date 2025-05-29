@@ -1,3 +1,19 @@
 % ai-phishing-detection-dissertation/report/sections/4-results/user-feedback-for-xai-explanations.tex
 
 \subsection{User feedback on XAI explanations}
+To gather some preliminary insights into the generated explanations and assess their user-friendly aspects, a small group of peers were selected to solicit informal, qualitative feedback from them. Each of the peers (around 4 or 5 selected), were first shown the Random Forest SHAP waterfall plot, as well as a DistilBERT LIME explanation, along with the corresponding email instance and relevant model classification outcome.\newline
+
+\noindent General, open-ended questions were asked on the effectiveness and clarity of the explanations, and how they highlighted the features in which the model was largely influenced by. Their perceived trustworthiness of each particular model was noted. Questions included, but were not limited to:
+
+\begin{enumerate}
+  \item "\textit{How clear is this generated explanation to you, in aiding your understanding for the model's prediction?}"
+  \item "\textit{Do the generated explanations increase your trust in AI-based systems (if any beforehand)?}"
+  \item "\textit{What aspects of this generated explanation are specifically helpful to you?}"
+  \item "\textit{Do you prefer the SHAP waterfall plots of the LIME word-level highlighting?}"
+\end{enumerate}
+
+\noindent The responses were varies and ranged, indicating several themes of both trust coupled with confusion. Participants were found to generally prefer the word-level highlighting of DistilBERT's LIME explanations to be more helpful, than the SHAP waterfall plot. A few of the participants took a liking to the vertical, visually colour-coded waterfall plots with arrows to indicate what features skewed the prediction. An individual noted that they would have liked to seen a combination of both waterfall plots and word-level highlighting for both models, for a more helpful. The responses amongst this were split evenly, with no clear, overwhelming bias for either.\newline
+
+\noindent It's important to note that the generated explanations definitely increased understanding, and raised the baseline levels of default trust a typical user would instil in the system. Some users still had doubt in the system regardless however, reserving their skepticism on the AI systems regardless of understanding their decision-making processes. Some participants revealed that the XAI explanations did not whatsoever impact their trust on the models, and their interaction with the system would remain the same. One participant raised a point that the explanations could perhaps be misleading if the model was focusing on the wrong terms or features. Another mentioned how their trust would solely be based upon the numerical, performance metrics of the model such as accuracy, prevision, recall, and F1-score.\newline
+
+\noindent These observations, whilst informal and limited in sample size, still form an initial basis to further optimise user-centric XAI applications.
