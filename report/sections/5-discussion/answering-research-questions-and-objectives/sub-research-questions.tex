@@ -1,3 +1,22 @@
 % ai-phishing-detection-dissertation/report/section/5-discussion/answering-research-questions-and-objectives/sub-research-questions.tex
 
 \subsubsection*{Sub research questions}
+
+\begin{enumerate}
+  \item \textbf{SUB RESEARCH QUESTION 1}: "\textit{What are the current limitations of AI phishing detection models in terms of their usability and interpretability?}"
+  \begin{itemize}
+    \item \hyperref[sec:2-literature-review]{\uline{\textbf{Section 2}}} conducts a comprehnsive literature review on that covers the current state of AI models in the context of phishing detection and how most of them are inherently "black-boxed". It also explores how although transformer models, like DistilBERT for example, can achieve a high accuracy for classification tasks like phishing detection, their inner workings are obscured and hard to understand. This underscores the need for XAI techniques such as SHAP and LIME to allow these models to become more interpretable and be trustworthy enough to be deployed in a wide range of settings. The practical limitations when implementing this study are detailed in \hyperref[sec:5-discussion]{\uline{\textbf{Section 5}}}.
+  \end{itemize}
+  \item \textbf{SUB RESEARCH QUESTION 2}: "\textit{How do the interpretability features affect a user's trust building and decision-making processes?}"
+  \begin{itemize}
+    \item The informal user feedback collected addresses this research question. Responses varied, but most were positively accepting of the XAI explanations as a way to increase their trust in an AI system, as well as being able to somewhat understand the inner workings behind the decision making and classificaion processes through the visualisations. All observations are detailed \hyperref[sec:4-results]{\uline{\textbf{Section 4}}}.
+  \end{itemize}
+  \item \textbf{SUB RESEARCH QUESTION 3}: "\textit{How can XAI techniques, i.e. SHAP and LIME, be integrated efficiently on top of existing AI phishing detection models?}"
+  \begin{itemize}
+    \item The study took two basline models, Random Forest (via sckit-learn) and DistilBERT (via Hugging Face), and integrated SHAP with TF-IDF features and LIME respectively. The implementation is covered in \hyperref[sec:3-research-methodology]{\uline{\textbf{Section 3}}}, showing the entire process from preprocessing to evaluation to XAI explanation generation. In terms of efficiency, this concerns the computational costs for training both models, concerning the training times and generation of XAI explanations (individual email instances demonstrated in \hyperref[sec:4-results]{\uline{\textbf{Section 4}}}).
+  \end{itemize}
+\item \uline{\textbf{SUB RESEARCH QUESTION 4}: "\textit{What trade-offs, if any, arise between the performance and interpretability of the AI phishing detection model?}}"
+  \begin{itemize}
+    \item For this study, XAI techniques were applied after the models were trained. The application of these techniques did not in anyway impact the performance of either the Random Forest or the DistilBERT models. There were no trade-offs concerning the accuracy per say, but there was in the complexity of the model against the type of explaination that can be generated. For example, direct feature importance from Random Forest via SHAP on the TDF-IDF features, compared to the word-level highlighting for DistilBERT via LIME. Another major trade-off is the model's exceptional performance on internal data compared to general data -- XAI can be implemented here to address this.
+  \end{itemize}
+\end{enumerate}
