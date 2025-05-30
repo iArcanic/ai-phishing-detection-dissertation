@@ -11,3 +11,23 @@ There was a very contrasting observation in the performance for both models, whe
   \item \textbf{The recall for the phishing class was very low, from approx. 0.02 to 0.38}. Both models missed many of the actual phishing emails in these sources, and were actually classed as legitimate.
   \item A low recall impacts the \textbf{overall accuracy and F1-scores} of these models, resulting in very low scores.
 \end{itemize}
+
+The main reason for these challenges when dealing with general  sources might be due to a domain shift or a mismatch in the dataset. The semantic patterns, language structure, choice of vocabulary, and topics of the email content were very much different to the data the models were trained upon. The models relied too much upon the specific patterns present within the Enron ham and CEAS phishing emails. These patterns were not well applied by the models on external data.\newline
+
+\noindent A domain shift might be caused by the following:
+
+\begin{itemize}
+  \item \textbf{Vocabulary and feature mismatch}:
+  \begin{itemize}
+    \item The Random Forest model was trained on the TF-IDF features, and these were based on the language and choice of words in the Enron and CEAS emails. External dataset emails had n-gram or terms that were OOV for the "\texttt{TfidfVectorizer}" model. It might have been the case that the known terms cannot be applied to the context of the external sources. It would only mean that feature vectors for these external samples do not match the same feature vectors the model was trained upon. There is a mismatch therefore.
+    \item On the other hand, the DistilBERT model is more resilient to variations in vocabulary and language structure. It suffers heavily from fine-tuning process since it was made to fit the training corpus solely. Obviously if the semantic patterns in external datasets are different, then it only makes sense that performance would degrade as such.
+  \end{itemize}
+  \item \textbf{Evolution and diversity of phishing tactics}:
+  \begin{itemize}
+    \item The Nigerian Fraud "419 scam" dataset consists of emails with a very niche style of narration and semantics. These social engineering tactics were likely not present within the CEAS phishing emails as much.
+    \item The SpamAssassin phishing email test set is known to contain a diverse range of general spam that may not have been well represented in the CEAS phishing email examples.
+  \end{itemize}
+  \item \textbf{Nuances in preprocessing}: All of the external datasets received the same preprocessing treatment, minus for the Nigerian Fraud dataset that was only minimally cleaned to preserve social engineering cues. Unintentionally, it might have been processed in a different manner by the "\texttt{TfidfVectorizer}" for the Random Forest model or the "\texttt{DistilBertTokenizer}" for the DistilBERT model. They may have expected the same, standard cleaned format  that the "\texttt{clean\_text\_content}" function performed for the training corpus. Preprocessing differences could potentially impact performance.
+\end{itemize}
+
+\noindent Both models have a habit of defaulting to predicting these emails as "ham", meaning there was a high precision but low recall for the phishing class. Features didn't trigger the learned phishing patterns from the training corpus as much. Such a behaviour minimises false positives for on all-ham external datasets like SpamAssassin Easy/Hard ham, but was not helpful for the external phishing-only datasets.
