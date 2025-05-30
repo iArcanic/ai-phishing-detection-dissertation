@@ -1,4 +1,14 @@
 % ai-phishing-detection-dissertation/report/section/5-discussion/xai-insights/distilbert-lime-explanations.tex
 
 \subsubsection*{DistilBERT (LIME) explanations}
+Explanations for the fine-tuned DistilBERT model were generated with LIME. The following was revealed:
 
+\begin{itemize}
+  \item \textbf{DistilBERT (LIME) explanations}: The LIME visualisations show how each specific word within an email instance most contributed to the final prediction.
+  \begin{itemize}
+    \item LIME identified words like "\textit{love}", "\textit{length}", "\textit{width}", "\textit{crying}", and "\textit{stronger}" (from Instance 0) as contributions to the phishing decisions the model makes. Spam emails usually try and invoke a response from a user as part of their tactics, and words like so are often used to achieve this.
+    \item Additionally, terms like "\textit{cnn}", "\textit{videos}", and "\textit{starbucks}" were highlighted by the LIME explanation (from Instance 1), marking these words as phishing. This is once again consistent with spam email tactics, who often use fake news updates to trick users with. Furthermore, LIME also showed some other words like "\textit{trial}" and "\textit{casey}" that push a classification away from the phishing label. The model is capable of catching conflicting signals.
+    \item LIME explanations also strongly weights terms like "\textit{medicine}", "\textit{delivery}", and "\textit{fast}" (from Instance 2), even if the email instance is concise and short. It matches common keywords used in spam emails.
+  \end{itemize}
+  \item \textbf{Interpretability of LIME}: The word-level highlighting of LIME makes these explanations more easier to understand and comprehend than SHAP initially. Specific text components, that led to the final decision, can be singled out and analysed separately. This helps to provide a more direct semantic relation, rather than explaining the TF-IDF features via SHAP for the Random Forest model
+\end{itemize}
