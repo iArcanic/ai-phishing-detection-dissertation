@@ -1,0 +1,15 @@
+% ai-phishing-detection-dissertation/report/section/5-discussion/interpretation-of-model-performance/performance-on-internal-test-set.tex
+
+\subsubsection*{Performance on internal test set}
+It can be observed that both the tuned Random Forest and fine-tuned DistilBERT model performed very well on the internal test set of data from the same training distribution, with DistilBERT achieving slightly higher scores across all performance metrics. There were several factors which most likely contributed to this performance:
+
+\begin{itemize}
+  \item \textbf{Balanced training data}: The main training corpus consists of close to 40,000 Enron ham emails, matching same number of the 40,000 phishing emails from the CEAS 2008 dataset. This shows that the dataset was well balanced. This means models were not significantly biased towards a majority class, limiting their performance.
+  \item \textbf{Sufficient data volume}: The combined size of the training data proved to be substantial for the models to distinguish unique patterns in both the ham and spam emails for this data distribution.
+  \item \textbf{Effective feature representation}:
+  \begin{itemize}
+    \item The Random Forest model was trained upon engineered TF-IDF features that include unigrams and bigrams that provided discriminations boundaries in the Enron and CEAS emails.
+    \item The DistilBERT model comes with a pre-trained understanding of the context of language and is capable of being fine-tuned for a specific dataset. This was very useful in learning the unique differences between the phishing and legitimate emails for the combined Enron-CEAS corpus. The edge in its performance is perhaps from the inherent nature of capturing semantic patterns well, when compared to the accumulation of words present in TF-IDF.
+  \end{itemize}
+  \item \textbf{Clear distinguishing feature}: It would be safe to say that there are linguistic and semantic variations between the Enron and CEAS emails. This was a key aspect that both models utilised well.
+\end{itemize}

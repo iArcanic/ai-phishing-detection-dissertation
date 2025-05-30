@@ -1,0 +1,13 @@
+% ai-phishing-detection-dissertation/report/section/5-discussion/interpretation-of-model-performance/generalisation-challenges-on-independent-test-sets.tex
+
+\subsubsection*{Generalisation challenge on independent test sets}
+There was a very contrasting observation in the performance for both models, when evaluated on a selection of external, independent test sets. While both models achieved excellent scores on the internal test set of the Enron-CEAS distribution, the models fall short for general phishing and legitimate emails.\newline
+
+\noindent A consistent trend was seen for both models on these external datasets:
+
+\begin{itemize}
+  \item \textbf{Precision for the phishing class remained high, often at 1.0000}. The models recognised emails as phishing from these data sources, and often got them correct.
+  \item Likewise, \textbf{precision for the ham class remained high, often at 1.0000}. The models recognised emails as legitimate from these data sources, and got almost all instances correct.
+  \item \textbf{The recall for the phishing class was very low, from approx. 0.02 to 0.38}. Both models missed many of the actual phishing emails in these sources, and were actually classed as legitimate.
+  \item A low recall impacts the \textbf{overall accuracy and F1-scores} of these models, resulting in very low scores.
+\end{itemize}
