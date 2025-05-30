@@ -1,0 +1,13 @@
+% ai-phishing-detection-dissertation/report/section/5-discussion/answering-research-questions-and-objectives/primary-research-question.tex
+
+\subsubsection*{Primary research question}
+"\textit{How can Explainable AI (XAI) improve the usability and trustworthiness of AI-based phishing detection systems without compromising on accuracy?}"
+
+\begin{itemize}
+  \item \textbf{Accuracy}: From this study, the Random Forest and DistilBERT models achieved very high accuracies, 0.9815 and 0.9973 respectively, on the internal test set comprised of Enron ham and CEAS 2008 phishing emails. XAI techniques, SHAP for Random Forest and LIME for DistilBERT, were applied as an analysis to the model's decision making process, and did not in any way affect the predictive accuracy when tested on the internal set. So for in-distribution data, it's safe to conclude that XAI doesn't have any affect on the accuracy. However, the generalisation limitations on external, independent datasets show that accuracy on in-distribution data cannot apply, and guarantee a similar or reasonable performance, on different distributions of data. This is an area that XAI can help demystify.
+  \item \textbf{Usability and trustworthiness}:
+  \begin{itemize}
+    \item Analysing the generated SHAP and LIME explanations qualitatively did indeed acknowledge that XAI gives insight into the behaviour and decision making processes of a model. The word-based highlighting by LIME proved to be more superior in its understandability, but this is not to disregard the difference in perspective that SHAP provides for Random Forest, in terms of exploring the significant of TF-IDF terms on the model's overall classification.
+    \item Preliminary, informal user feedback was solicited from a small group of participants. The feedback gives pointers to enhancing explanations for both models, especially for Random Forest. There were varying responses on the trust, clarity of explanations, and overall usefulness of the generated explanations, coupled with pre-existing notions participants had about AI.
+  \end{itemize}
+\end{itemize}
