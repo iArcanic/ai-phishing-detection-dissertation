@@ -1,0 +1,317 @@
+\subsubsection*{}
+
+\begin{ffcode}
+
+print("Loading libraries...")
+
+# Core libraries
+import os
+import pandas as pd
+import numpy as np
+import shutil
+import zipfile
+
+# PyTorch
+import torch
+from torch.utils.data import Dataset, DataLoader
+
+# Transformers
+from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification
+
+# Install LIME into the environment
+!pip install lime -q
+
+# XAI LIME
+import lime
+import lime.lime_text
+from lime.lime_text import LimeTextExplainer
+
+# Scikit-learn
+import sklearn # LIME often interacts with scikit-learn pipelines or functions
+from sklearn.pipeline import make_pipeline # Useful for LIME with text
+
+# Loading models
+import joblib
+
+# If loading data/model from Google Drive
+import gdown
+
+# Visualisation
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Check for GPU (model inference might still benefit)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+
+else:
+    device = torch.device("cpu")
+    print("GPU not available, using CPU.")
+
+pd.set_option('display.max_colwidth', 200)
+
+print("Libraries imported.")
+
+# --- Define GDrive ID and Local Filenames for the ZIPPED Model Directory ---
+GDRIVE_MODEL_DIR_ZIP_ID = '1tIyuHVNjt2g8K3aP0uqw39cijSX_55cl'
+LOCAL_MODEL_DIR_ZIP_FILENAME = 'phishing-distilbert.zip'
+
+# Path where the model directory will be after unzipping
+DISTILBERT_MODEL_LOAD_PATH = './phishing-distilbert/'
+
+# --- gdown download function ---
+def download_file_from_gdrive(file_id, local_filename):
+    if not os.path.exists(local_filename):
+        print(f"Downloading {local_filename} from Google Drive...")
+        gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+        try:
+            gdown.download(gdrive_url, local_filename, quiet=False)
+            print(f"{local_filename} downloaded successfully.")
+
+        except Exception as e:
+            print(f"ERROR downloading {local_filename}: {e}. Check File ID and share settings.")
+            return False
+    else:
+        print(f"{local_filename} already exists in Colab runtime.")
+
+    return os.path.exists(local_filename)
+
+# --- Download and Unzip the Model Directory ---
+loaded_distilbert_model = None
+loaded_tokenizer = None
+model_components_loaded_distilbert = False
+
+# Check if the target directory already exists (e.g., from a previous run)
+if os.path.exists(DISTILBERT_MODEL_LOAD_PATH) and os.listdir(DISTILBERT_MODEL_LOAD_PATH):
+    print(f"Model directory '{DISTILBERT_MODEL_LOAD_PATH}' already exists and is not empty. Attempting to load directly.")
+
+    # Assume it's ready for loading
+    model_components_loaded_distilbert = True
+
+elif download_file_from_gdrive(GDRIVE_MODEL_DIR_ZIP_ID, LOCAL_MODEL_DIR_ZIP_FILENAME):
+    if os.path.exists(LOCAL_MODEL_DIR_ZIP_FILENAME):
+        print(f"Unzipping {LOCAL_MODEL_DIR_ZIP_FILENAME} to recreate '{DISTILBERT_MODEL_LOAD_PATH}'...")
+        try:
+            if os.path.exists(DISTILBERT_MODEL_LOAD_PATH): # Clean up if dir exists but was empty
+                shutil.rmtree(DISTILBERT_MODEL_LOAD_PATH)
+
+            with zipfile.ZipFile(LOCAL_MODEL_DIR_ZIP_FILENAME, 'r') as zip_ref:
+                # Extracts to current directory, assuming zip contains the folder
+                zip_ref.extractall('./')
+
+            print(f"Successfully unzipped to create/populate '{DISTILBERT_MODEL_LOAD_PATH}'.")
+
+            # Ready for loading attempt
+            model_components_loaded_distilbert = True
+
+        except Exception as e:
+            print(f"Error unzipping {LOCAL_MODEL_DIR_ZIP_FILENAME}: {e}")
+            model_components_loaded_distilbert = False
+
+    else:
+        print(f"Zip file {LOCAL_MODEL_DIR_ZIP_FILENAME} not found after download attempt.")
+        model_components_loaded_distilbert = False
+
+else:
+    print(f"Could not download the model zip file.")
+    model_components_loaded_distilbert = False
+
+# --- Load Model and Tokenizer from the (now local) directory ---
+if model_components_loaded_distilbert and os.path.exists(DISTILBERT_MODEL_LOAD_PATH) and os.path.isdir(DISTILBERT_MODEL_LOAD_PATH):
+    try:
+        print(f"\nLoading fine-tuned DistilBERT model from local path: {DISTILBERT_MODEL_LOAD_PATH}")
+        loaded_distilbert_model = DistilBertForSequenceClassification.from_pretrained(DISTILBERT_MODEL_LOAD_PATH)
+
+        # Move model to GPU
+        loaded_distilbert_model.to(device)
+
+        # Set to evaluation mode
+        loaded_distilbert_model.eval()
+
+        print(f"Loading tokenizer from local path: {DISTILBERT_MODEL_LOAD_PATH}")
+        loaded_tokenizer = DistilBertTokenizerFast.from_pretrained(DISTILBERT_MODEL_LOAD_PATH)
+
+        print("DistilBERT model and tokenizer loaded successfully.")
+
+    except Exception as e:
+        print(f"Error loading DistilBERT model or tokenizer from {DISTILBERT_MODEL_LOAD_PATH}: {e}")
+        model_components_loaded_distilbert = False
+
+# True from download/unzip but path check failed
+elif model_components_loaded_distilbert:
+    print(f"ERROR: Path '{DISTILBERT_MODEL_LOAD_PATH}' not found or not a directory after unzip attempt.")
+    model_components_loaded_distilbert = False
+
+if not model_components_loaded_distilbert:
+    print("\nCritical error: DistilBERT model or tokenizer could not be loaded. Cannot proceed with evaluation.")
+
+# --- Define GDrive ID and Local Filename for test_corpus.csv ---
+TEST_CORPUS_CSV_GDRIVE_FILE_ID = '1bR5kipQPB21VSvjpLypbzkQAP0v-sAaw'
+TEST_CORPUS_CSV_LOCAL_FILENAME = 'test_corpus.csv'
+
+df_explain_text_full = pd.DataFrame() # To store the full loaded test corpus
+df_explain_text = pd.DataFrame()      # To store the sample we'll use for explanations
+TEXT_COL_FOR_EXPLANATION = None       # To store the name of the relevant text column
+
+# --- Download and Load test_corpus.csv ---
+if download_file_from_gdrive(TEST_CORPUS_CSV_GDRIVE_FILE_ID, TEST_CORPUS_CSV_LOCAL_FILENAME):
+    if os.path.exists(TEST_CORPUS_CSV_LOCAL_FILENAME):
+        try:
+            df_explain_text_full = pd.read_csv(TEST_CORPUS_CSV_LOCAL_FILENAME)
+            print(f"Successfully loaded original test text data: {TEST_CORPUS_CSV_LOCAL_FILENAME}, shape: {df_explain_text_full.shape}")
+
+            # Determine the text column that DistilBERT was trained on
+            # This logic should match how you defined FEATURE_TEXT_COLUMN in notebook 07
+            if 'text_features_combined' in df_explain_text_full.columns:
+                TEXT_COL_FOR_EXPLANATION = 'text_features_combined'
+
+            # Fallback
+            elif 'body_cleaned' in df_explain_text_full.columns:
+                TEXT_COL_FOR_EXPLANATION = 'body_cleaned'
+
+            else:
+                print("ERROR: Critical text column ('text_features_combined' or 'body_cleaned') not found in df_explain_text_full.")
+
+            if TEXT_COL_FOR_EXPLANATION:
+                print(f"Using text column '{TEXT_COL_FOR_EXPLANATION}' for LIME explanations.")
+
+                # Ensure the label column also exists for reference
+                if 'label' not in df_explain_text_full.columns:
+                    print("Warning: 'label' column not found in df_explain_text_full. True labels will not be available for comparison.")
+
+                # Select a small sample of texts to explain (e.g., 5-10 instances)
+                # It's good to pick a mix if possible (e.g., some phishing, some ham from this test set)
+                sample_size_for_lime = min(10, len(df_explain_text_full))
+                df_explain_text = df_explain_text_full.sample(n=sample_size_for_lime, random_state=42).copy()
+
+                # Ensure the text column in the sample is clean (fill NaNs)
+                df_explain_text[TEXT_COL_FOR_EXPLANATION] = df_explain_text[TEXT_COL_FOR_EXPLANATION].fillna('')
+
+                print(f"\nSelected {len(df_explain_text)} samples for LIME explanation.")
+
+                if 'label' in df_explain_text.columns:
+                    print(df_explain_text[[TEXT_COL_FOR_EXPLANATION, 'label']].head())
+
+                else:
+                    print(df_explain_text[[TEXT_COL_FOR_EXPLANATION]].head())
+
+        except Exception as e:
+            print(f"Error reading or sampling from {TEST_CORPUS_CSV_LOCAL_FILENAME}: {e}")
+            df_explain_text = pd.DataFrame()
+
+    else:
+        print(f"ERROR: {TEST_CORPUS_CSV_LOCAL_FILENAME} not found after download attempt.")
+        df_explain_text = pd.DataFrame()
+
+else:
+    print(f"Could not download {TEST_CORPUS_CSV_LOCAL_FILENAME}. Cannot load data for explanation.")
+    df_explain_text = pd.DataFrame()
+
+if df_explain_text.empty or TEXT_COL_FOR_EXPLANATION is None:
+    print("\nWarning: No data loaded or text column not identified for LIME explanations. Subsequent XAI steps may fail.")
+
+else:
+    print("\nData for LIME explanations loaded and sampled successfully.")
+
+def distilbert_predictor_for_lime(texts_list):
+    if loaded_distilbert_model is None or loaded_tokenizer is None:
+        raise ValueError("DistilBERT model or tokeniser not loaded.")
+
+    # Tokenize the texts
+    # MAX_LENGTH here should ideally match what the model was trained/fine-tuned with (e.g., 256)
+    # Or use tokenizer.model_max_length if appropriate and not excessively large
+    max_len_lime = min(loaded_tokenizer.model_max_length, 256)
+
+    inputs = loaded_tokenizer(
+        texts_list,
+        padding='max_length', # Pad to max_length
+        truncation=True,    # Truncate to max_length
+        max_length=max_len_lime,
+        return_tensors="pt" # Return PyTorch tensors
+    )
+
+    input_ids = inputs['input_ids'].to(device)
+    attention_mask = inputs['attention_mask'].to(device)
+
+    with torch.no_grad():
+        outputs = loaded_distilbert_model(input_ids, attention_mask=attention_mask)
+        logits = outputs.logits
+
+        # LIME expects probabilities for each class
+        probabilities = torch.softmax(logits, dim=-1)
+
+    return probabilities.cpu().numpy()
+
+if model_components_loaded_distilbert:
+    # Test the predictor function with a sample text
+    try:
+        sample_texts_for_lime_test = ["This is a test email.", "Click here for your prize!"]
+        probs = distilbert_predictor_for_lime(sample_texts_for_lime_test)
+        print(f"LIME predictor function test (output shape for 2 samples, 2 classes): {probs.shape}")
+        print(f"Sample probabilities:\n{probs}")
+
+    except Exception as e:
+        print(f"Error testing LIME predictor function: {e}")
+
+else:
+    print("Model not loaded, cannot define or test LIME predictor.")
+
+lime_explainer = None
+
+if model_components_loaded_distilbert:
+    try:
+        # class_names for LIME: Ham (0), Phish (1)
+        class_names_lime = ['Ham', 'Phishing']
+        lime_explainer = LimeTextExplainer(class_names=class_names_lime)
+        print("LIME Text Explainer initialized.")
+
+    except Exception as e:
+        print(f"Error initializing LIME explainer: {e}")
+
+if lime_explainer and not df_explain_text.empty and TEXT_COL_FOR_EXPLANATION:
+
+    # Show for a few samples
+    num_lime_explanations_to_show = min(3, len(df_explain_text))
+
+    print(f"\nGenerating LIME explanations for {num_lime_explanations_to_show} instances...")
+
+    for i in range(num_lime_explanations_to_show):
+        instance_text = df_explain_text[TEXT_COL_FOR_EXPLANATION].iloc[i]
+        instance_true_label = df_explain_text['label'].iloc[i]
+
+        print(f"\n--- Explaining Instance {i+1} (True Label: {class_names_lime[instance_true_label]}) ---")
+        print(f"Text (first 300 chars): {instance_text[:300]}")
+
+        try:
+            # Generate explanation: explain_instance(text_instance, classifier_fn, num_features, labels_to_explain)
+            # We want to explain both classes, or just the predicted class.
+            # Let's explain the top class by default, or you can specify labels=(0,1)
+            # num_features controls how many words are highlighted by LIME.
+            explanation = lime_explainer.explain_instance(
+                instance_text,
+                distilbert_predictor_for_lime, # Our predictor function
+                num_features=10, # Highlight top 10 words
+                num_samples=1000 # Number of samples LIME generates to perturb text (can reduce if slow)
+            )
+
+            # Show explanation in notebook (HTML format)
+            # You can also get the explanation as a list: explanation.as_list(label=1) for phishing
+            print(f"LIME explanation for instance {i+1}:")
+
+            # Shows highlighted text
+            explanation.show_in_notebook(text=True)
+
+            # Print weights for the predicted class or a specific class
+            predicted_class_idx = distilbert_predictor_for_lime([instance_text]).argmax()
+            print(f"Predicted class index: {predicted_class_idx} ({class_names_lime[predicted_class_idx]})")
+            print(f"Explanation for Phishing (label 1): {explanation.as_list(label=1)}")
+            print(f"Explanation for Ham (label 0): {explanation.as_list(label=0)}")
+
+        except Exception as e:
+            print(f"Error generating LIME explanation for instance {i+1}: {e}")
+
+else:
+    print("LIME explainer not initialised or no data to explain.")
+\end{ffcode}

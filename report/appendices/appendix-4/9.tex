@@ -1,0 +1,408 @@
+\subsubsection*{09\_distilbert\_model\_training\_and\_evaluation.ipynb}
+
+\begin{ffcode}
+print("Loading libraries...")
+
+# Core libraries
+import os
+import time
+
+# Data manipulation libraries
+import pandas as pd
+import numpy as np
+
+# PyTorch
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torch.optim import AdamW
+
+# Transformers library for DistilBERT model
+from transformers import (
+    DistilBertTokenizerFast,
+    DistilBertForSequenceClassification,
+    get_linear_schedule_with_warmup
+)
+
+# Scikit learn imports
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+    roc_auc_score,
+    classification_report
+)
+
+# For saving/loading tokenizer if not part of model save
+import joblib
+
+# Loading data from Google Drive
+import gdown
+
+# Visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Check for GPU
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+
+else:
+    device = torch.device("cpu")
+    print("WARNING: GPU not available, using CPU. Training will be very slow.")
+
+pd.set_option('display.max_colwidth', 150)
+
+print("Libraries loaded.")
+
+# --- Define Google Drive File IDs and local filenames ---
+TRAIN_CORPUS_GDRIVE_FILE_ID = '1x1E4c6lK7H888RC2ucyhRZuSEXn23x0Z'
+TRAIN_CORPUS_LOCAL_FILENAME = 'train_corpus.csv'
+
+VALIDATION_CORPUS_GDRIVE_FILE_ID = '19jIrYmW5MkY4D4AApDlA_Bu2QcgC5HcP'
+VALIDATION_CORPUS_LOCAL_FILENAME = 'validation_corpus.csv'
+
+TEST_CORPUS_GDRIVE_FILE_ID = '1bR5kipQPB21VSvjpLypbzkQAP0v-sAaw'
+TEST_CORPUS_LOCAL_FILENAME = 'test_corpus.csv'
+
+# --- gdown download function ---
+def download_file_from_gdrive(file_id, local_filename):
+    if not os.path.exists(local_filename):
+        print(f"Downloading {local_filename} from Google Drive...")
+        gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+        try:
+            gdown.download(gdrive_url, local_filename, quiet=False)
+            print(f"{local_filename} downloaded.")
+
+        except Exception as e:
+            print(f"ERROR downloading {local_filename}: {e}")
+            return False
+
+    else:
+        print(f"{local_filename} already exists.")
+
+    return os.path.exists(local_filename)
+
+# --- Load files ---
+df_train_text, df_val_text, df_test_text = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+all_text_files_loaded = True
+
+if download_file_from_gdrive(TRAIN_CORPUS_GDRIVE_FILE_ID, TRAIN_CORPUS_LOCAL_FILENAME):
+    try:
+        df_train_text = pd.read_csv(TRAIN_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded train: {df_train_text.shape}")
+
+    except Exception as e:
+        print(f"Error reading {TRAIN_CORPUS_LOCAL_FILENAME}: {e}")
+        all_text_files_loaded = False
+
+else:
+    all_text_files_loaded = False
+
+if download_file_from_gdrive(VALIDATION_CORPUS_GDRIVE_FILE_ID, VALIDATION_CORPUS_LOCAL_FILENAME):
+    try:
+        df_val_text = pd.read_csv(VALIDATION_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded val: {df_val_text.shape}")
+
+    except Exception as e:
+        print(f"Error reading {VALIDATION_CORPUS_LOCAL_FILENAME}: {e}")
+        all_text_files_loaded = False
+
+else:
+    all_text_files_loaded = False
+
+if download_file_from_gdrive(TEST_CORPUS_GDRIVE_FILE_ID, TEST_CORPUS_LOCAL_FILENAME):
+    try:
+        df_test_text = pd.read_csv(TEST_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded test: {df_test_text.shape}")
+
+    except Exception as e:
+        print(f"Error reading {TEST_CORPUS_LOCAL_FILENAME}: {e}")
+        all_text_files_loaded = False
+
+else:
+    all_text_files_loaded = False
+
+if all_text_files_loaded and not df_train_text.empty:
+    print("\nTrain data text head:")
+    print(df_train_text.head(2))
+
+elif not all_text_files_loaded:
+    print("\nOne or more text dataset files could not be loaded.")
+
+MODEL_NAME = 'distilbert-base-uncased'
+tokeniser = None
+train_encodings, val_encodings, test_encodings = None, None, None
+y_train_distilbert, y_val_distilbert, y_test_distilbert = None, None, None
+
+if all_text_files_loaded and not df_train_text.empty:
+    # --- Prepare combined text feature ---
+    TEXT_COL_BODY = 'body_cleaned'
+    TEXT_COL_SUBJECT = 'subject_cleaned'
+    FEATURE_TEXT_COLUMN_DISTILBERT = 'text_for_distilbert'
+
+    for df in [df_train_text, df_val_text, df_test_text]:
+        if TEXT_COL_BODY in df.columns:
+            df[TEXT_COL_BODY] = df[TEXT_COL_BODY].fillna('')
+
+        if TEXT_COL_SUBJECT in df.columns:
+            df[TEXT_COL_SUBJECT] = df[TEXT_COL_SUBJECT].fillna('')
+
+        if TEXT_COL_SUBJECT in df.columns and TEXT_COL_BODY in df.columns:
+            df[FEATURE_TEXT_COLUMN_DISTILBERT] = df[TEXT_COL_SUBJECT].astype(str) + " " + df[TEXT_COL_BODY].astype(str)
+
+        elif TEXT_COL_BODY in df.columns:
+            df[FEATURE_TEXT_COLUMN_DISTILBERT] = df[TEXT_COL_BODY].astype(str)
+
+        else:
+            print(f"ERROR: Text columns not found in one of the dataframes for DistilBERT.")
+
+    if FEATURE_TEXT_COLUMN_DISTILBERT not in df_train_text.columns:
+        print("ERROR: Text feature column for DistilBERT not created.")
+
+    else:
+        train_texts = df_train_text[FEATURE_TEXT_COLUMN_DISTILBERT].tolist()
+        val_texts = df_val_text[FEATURE_TEXT_COLUMN_DISTILBERT].tolist()
+        test_texts = df_test_text[FEATURE_TEXT_COLUMN_DISTILBERT].tolist()
+
+        y_train_distilbert = df_train_text['label'].tolist()
+        y_val_distilbert = df_val_text['label'].tolist()
+        y_test_distilbert = df_test_text['label'].tolist()
+
+        # --- Initialize Tokeniser ---
+        print(f"Loading tokeniser for '{MODEL_NAME}'...")
+        tokeniser = DistilBertTokenizerFast.from_pretrained(MODEL_NAME)
+
+        # --- Tokenize Text ---
+        # Max length can be tuned. DistilBERT's max is 512.
+        MAX_LENGTH = 256
+        print(f"Tokenizing texts with max_length={MAX_LENGTH}...")
+
+        # Define encodings via tokenising
+        train_encodings = tokeniser(train_texts, truncation=True, padding=True, max_length=MAX_LENGTH, return_tensors="pt")
+        val_encodings = tokeniser(val_texts, truncation=True, padding=True, max_length=MAX_LENGTH, return_tensors="pt")
+        test_encodings = tokeniser(test_texts, truncation=True, padding=True, max_length=MAX_LENGTH, return_tensors="pt")
+
+        print("Tokenisation complete.")
+        print(f"Train encodings input_ids shape: {train_encodings['input_ids'].shape}")
+
+else:
+    print("Text data not loaded. Cannot tokenize.")
+
+train_dataset, val_dataset, test_dataset = None, None, None
+train_loader, val_loader, test_loader = None, None, None
+
+class PhishingDataset(Dataset):
+    def __init__(self, encodings, labels):
+        self.encodings = encodings
+        self.labels = labels
+
+    def __getitem__(self, idx):
+        item = {key: val[idx].clone().detach() for key, val in self.encodings.items()}
+        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
+        return item
+
+    def __len__(self):
+        return len(self.labels)
+
+if train_encodings and y_train_distilbert:
+    train_dataset = PhishingDataset(train_encodings, y_train_distilbert)
+    val_dataset = PhishingDataset(val_encodings, y_val_distilbert)
+    test_dataset = PhishingDataset(test_encodings, y_test_distilbert)
+
+    # Adjust based on GPU memory (16 or 32 are common for BERT-like models)
+    BATCH_SIZE = 16
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE)
+    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE)
+
+    print(f"PyTorch Datasets and DataLoaders created with BATCH_SIZE={BATCH_SIZE}.")
+
+    # Check a sample batch
+    sample_batch = next(iter(train_loader))
+    print("Sample batch keys:", sample_batch.keys())
+    print("Sample batch input_ids shape:", sample_batch['input_ids'].shape)
+
+else:
+    print("Tokenised data not available. Cannot create Datasets/DataLoaders.")
+
+distilbert_model = None
+
+if train_loader and val_loader:
+    print(f"Loading pre-trained DistilBERT model ('{MODEL_NAME}') for sequence classification...")
+
+    # 2 labels: Ham (0), Phish (1)
+    distilbert_model = DistilBertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=2)
+
+    # Move model to GPU if available
+    distilbert_model.to(device)
+
+    # --- Training Hyperparameters ---
+    EPOCHS = 3
+    LEARNING_RATE = 2e-5
+
+    optimizer = AdamW(distilbert_model.parameters(), lr=LEARNING_RATE)
+    total_steps = len(train_loader) * EPOCHS
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=total_steps)
+
+    print(f"Starting fine-tuning for {EPOCHS} epochs...")
+
+    for epoch in range(EPOCHS):
+        start_time_epoch = time.time()
+        print(f"\n--- Epoch {epoch + 1}/{EPOCHS} ---")
+
+        # --- Training Loop ---
+        distilbert_model.train()
+        total_train_loss = 0
+        for batch_num, batch in enumerate(train_loader):
+            optimizer.zero_grad()
+            input_ids = batch['input_ids'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            labels = batch['labels'].to(device)
+
+            outputs = distilbert_model(input_ids, attention_mask=attention_mask, labels=labels)
+            loss = outputs.loss
+            total_train_loss += loss.item()
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(distilbert_model.parameters(), 1.0) # Gradient clipping
+            optimizer.step()
+            scheduler.step()
+
+            if (batch_num + 1) % 100 == 0: # Print progress every 100 batches
+                print(f"  Epoch {epoch+1}, Batch {batch_num+1}/{len(train_loader)}, Avg Train Loss: {total_train_loss/(batch_num+1):.4f}")
+
+        avg_train_loss = total_train_loss / len(train_loader)
+        print(f"Epoch {epoch+1} - Average Training Loss: {avg_train_loss:.4f}")
+
+        # --- Validation Loop ---
+        distilbert_model.eval()
+        total_eval_loss = 0
+        all_val_preds = []
+        all_val_labels = []
+
+        with torch.no_grad():
+            for batch in val_loader:
+                input_ids = batch['input_ids'].to(device)
+                attention_mask = batch['attention_mask'].to(device)
+                labels = batch['labels'].to(device)
+
+                outputs = distilbert_model(input_ids, attention_mask=attention_mask, labels=labels)
+                loss = outputs.loss
+                total_eval_loss += loss.item()
+
+                logits = outputs.logits
+                preds = torch.argmax(logits, dim=-1)
+                all_val_preds.extend(preds.cpu().numpy())
+                all_val_labels.extend(labels.cpu().numpy())
+
+        avg_val_loss = total_eval_loss / len(val_loader)
+        val_accuracy = accuracy_score(all_val_labels, all_val_preds)
+
+        # Use weighted for overall F1
+        val_f1 = f1_score(all_val_labels, all_val_preds, average='weighted', zero_division=0)
+
+        epoch_duration = time.time() - start_time_epoch
+        print(f"Epoch {epoch+1} - Validation Loss: {avg_val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}, Validation F1: {val_f1:.4f}")
+        print(f"Epoch {epoch+1} duration: {epoch_duration:.2f} seconds.")
+
+    print("\nFine-tuning complete.")
+
+else:
+    print("Training data (DataLoaders) not available. Skipping model fine-tuning.")
+
+if distilbert_model and test_loader:
+    print("Evaluating DistilBERT model on the test set...")
+
+    # Set model to evaluation mode
+    distilbert_model.eval()
+
+    all_test_preds = []
+    all_test_labels = []
+
+    # For ROC AUC
+    all_test_probs = []
+
+    start_time_eval = time.time()
+
+    # No need to calculate gradients during evaluation
+    with torch.no_grad():
+        for batch in test_loader:
+            input_ids = batch['input_ids'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            labels = batch['labels'].to(device)
+
+            outputs = distilbert_model(input_ids, attention_mask=attention_mask)
+            logits = outputs.logits
+
+            # Get probabilities
+            probs = torch.softmax(logits, dim=-1)
+            preds = torch.argmax(logits, dim=-1)
+
+            all_test_preds.extend(preds.cpu().numpy())
+            all_test_labels.extend(labels.cpu().numpy())
+
+            # Probabilities for the positive class (phishing)
+            all_test_probs.extend(probs[:, 1].cpu().numpy())
+
+    eval_duration = time.time() - start_time_eval
+    print(f"Test set evaluation completed in {eval_duration:.2f} seconds.")
+
+    # Calculate metrics
+    test_accuracy_db = accuracy_score(all_test_labels, all_test_preds)
+    test_precision_db = precision_score(all_test_labels, all_test_preds, zero_division=0)
+    test_recall_db = recall_score(all_test_labels, all_test_preds, zero_division=0)
+    test_f1_db = f1_score(all_test_labels, all_test_preds, zero_division=0)
+
+    try:
+        test_roc_auc_db = roc_auc_score(all_test_labels, all_test_probs)
+
+    except ValueError:
+        test_roc_auc_db = float('nan')
+        print("Warning: ROC AUC for DistilBERT could not be computed.")
+
+
+    print(f"\n--- Test Set Evaluation Metrics (DistilBERT) ---")
+    print(f"Accuracy:  {test_accuracy_db:.4f}")
+    print(f"Precision: {test_precision_db:.4f} (Phishing)")
+    print(f"Recall:    {test_recall_db:.4f} (Phishing)")
+    print(f"F1-score:  {test_f1_db:.4f} (Phishing)")
+    print(f"ROC AUC:   {test_roc_auc_db:.4f}")
+
+    print("\nClassification Report (Test Set - DistilBERT):")
+    print(classification_report(all_test_labels, all_test_preds, zero_division=0))
+
+    print("\nConfusion Matrix (Test Set - DistilBERT):")
+    cm_db = confusion_matrix(all_test_labels, all_test_preds)
+    plt.figure(figsize=(6,4))
+    sns.heatmap(cm_db, annot=True, fmt='d', cmap='Blues', xticklabels=['Ham (0)', 'Phish (1)'], yticklabels=['Ham (0)', 'Phish (1)'])
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title('Confusion Matrix - Test Set (DistilBERT)')
+    plt.show()
+
+else:
+    print("DistilBERT model not trained or test data not available. Skipping evaluation.")
+
+# Save in Hugging Face format (directory)
+DISTILBERT_MODEL_SAVE_PATH = './distilbert_phishing_model/'
+
+if distilbert_model and tokeniser:
+    try:
+        if not os.path.exists(DISTILBERT_MODEL_SAVE_PATH):
+            os.makedirs(DISTILBERT_MODEL_SAVE_PATH)
+
+        distilbert_model.save_pretrained(DISTILBERT_MODEL_SAVE_PATH)
+        tokeniser.save_pretrained(DISTILBERT_MODEL_SAVE_PATH)
+
+        print(f"Fine-tuned DistilBERT model and tokenizer saved to: {DISTILBERT_MODEL_SAVE_PATH}")
+        print(f"Files will be in /content/{DISTILBERT_MODEL_SAVE_PATH.lstrip('./')}")
+
+    except Exception as e:
+        print(f"Error saving the DistilBERT model/tokenizer: {e}")
+
+else:
+    print("No DistilBERT model or tokeniser available to save.")
+\end{ffcode}

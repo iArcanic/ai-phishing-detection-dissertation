@@ -1,0 +1,33 @@
+# requirements.txt
+
+# Core Data Handling & Numerical Operations
+pandas
+numpy
+scipy
+
+# Machine Learning (Traditional)
+scikit-learn
+
+# Deep Learning (Transformers)
+torch
+transformers
+accelerate # Often useful with Hugging Face transformers
+
+# Explainable AI (XAI)
+shap
+lime
+
+# File Handling & Utilities
+joblib # For saving/loading scikit-learn models/vectorizers
+gdown  # For Google Drive downloads
+BeautifulSoup4 # For HTML parsing
+kagglehub # For downloading datasets from Kaggle
+
+# Visualization
+matplotlib
+seaborn
+
+# Jupyter Environment (good to list for notebook-based projects)
+ipykernel # Usually managed by Colab/Jupyter itself but sometimes listed
+jupyter # If running locally
+notebook # If running locally

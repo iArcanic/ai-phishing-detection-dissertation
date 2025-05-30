@@ -1,0 +1,338 @@
+\subsubsection*{07\_feature\_engineering.ipynb}
+
+\begin{ffcode}
+print("Loading libraries...")
+
+import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+import gdown
+
+# For saving the TfidfVectorizer model
+import joblib
+
+# To save sparse matrices if you use them
+from scipy.sparse import save_npz, load_npz
+
+from imblearn.over_sampling import SMOTE
+
+import os
+import time
+
+pd.set_option('display.max_colwidth', 150)
+
+print("Loading imported...")
+
+TRAIN_CORPUS_GDRIVE_FILE_ID = '1x1E4c6lK7H888RC2ucyhRZuSEXn23x0Z'
+TRAIN_CORPUS_LOCAL_FILENAME = 'train_corpus.csv'
+
+VALIDATION_CORPUS_GDRIVE_FILE_ID = '19jIrYmW5MkY4D4AApDlA_Bu2QcgC5HcP'
+VALIDATION_CORPUS_LOCAL_FILENAME = 'validation_corpus.csv'
+
+TEST_CORPUS_GDRIVE_FILE_ID = '1bR5kipQPB21VSvjpLypbzkQAP0v-sAaw'
+TEST_CORPUS_LOCAL_FILENAME = 'test_corpus.csv'
+
+# --- Function to download with gdown if file doesn't exist ---
+# (This function can be reused from your previous notebooks if you put it in a utils script)
+def download_file_from_gdrive(file_id, local_filename):
+    if not os.path.exists(local_filename):
+        print(f"Downloading {local_filename} from Google Drive...")
+        gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+        try:
+            # import gdown # Ensure gdown is imported (usually in Section 1)
+            gdown.download(gdrive_url, local_filename, quiet=False)
+            print(f"{local_filename} downloaded successfully.")
+
+        except Exception as e:
+            print(f"ERROR downloading {local_filename}: {e}. Check File ID and share settings.")
+            return False
+
+    else:
+        print(f"{local_filename} already exists in Colab runtime.")
+
+    return os.path.exists(local_filename)
+
+# --- Initialize DataFrames ---
+df_train = pd.DataFrame()
+df_val = pd.DataFrame()
+df_test = pd.DataFrame()
+all_files_loaded_successfully = True
+
+# --- Load Training Data ---
+if download_file_from_gdrive(TRAIN_CORPUS_GDRIVE_FILE_ID, TRAIN_CORPUS_LOCAL_FILENAME):
+    try:
+        df_train = pd.read_csv(TRAIN_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded {TRAIN_CORPUS_LOCAL_FILENAME}, shape: {df_train.shape}")
+
+    except Exception as e:
+        print(f"Error reading {TRAIN_CORPUS_LOCAL_FILENAME}: {e}")
+        all_files_loaded_successfully = False
+
+else:
+    all_files_loaded_successfully = False
+
+# --- Load Validation Data ---
+if download_file_from_gdrive(VALIDATION_CORPUS_GDRIVE_FILE_ID, VALIDATION_CORPUS_LOCAL_FILENAME):
+    try:
+        df_val = pd.read_csv(VALIDATION_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded {VALIDATION_CORPUS_LOCAL_FILENAME}, shape: {df_val.shape}")
+
+    except Exception as e:
+        print(f"Error reading {VALIDATION_CORPUS_LOCAL_FILENAME}: {e}")
+        all_files_loaded_successfully = False
+
+else:
+    all_files_loaded_successfully = False
+
+# --- Load Test Data ---
+if download_file_from_gdrive(TEST_CORPUS_GDRIVE_FILE_ID, TEST_CORPUS_LOCAL_FILENAME):
+    try:
+        df_test = pd.read_csv(TEST_CORPUS_LOCAL_FILENAME)
+        print(f"Loaded {TEST_CORPUS_LOCAL_FILENAME}, shape: {df_test.shape}")
+
+    except Exception as e:
+        print(f"Error reading {TEST_CORPUS_LOCAL_FILENAME}: {e}")
+        all_files_loaded_successfully = False
+
+else:
+    all_files_loaded_successfully = False
+
+# Check if train at least is loaded
+if all_files_loaded_successfully and not df_train.empty:
+    print("\nTraining data head:")
+    print(df_train.head(2))
+    print(f"Training data label distribution:\n{df_train['label'].value_counts(normalize=True)}")
+
+elif not all_files_loaded_successfully:
+    print("\nOne or more dataset files (train, val, test) could not be downloaded or loaded. Please check GDrive IDs and share settings.")
+
+# This will be set to the name of the column to vectorise
+FEATURE_TEXT_COLUMN = None
+
+# Ensure dataframes are loaded (basic check)
+if 'df_train' not in globals() or df_train.empty or \
+    'df_val' not in globals() or df_val.empty or \
+    'df_test' not in globals() or df_test.empty:
+    print("ERROR: df_train, df_val, or df_test is not loaded or is empty. Please run Section 2 successfully.")
+
+else:
+    TEXT_FEATURE_COL_BODY = 'body_cleaned'
+
+    # This was the name used when creating the splits
+    TEXT_FEATURE_COL_SUBJECT = 'subject_cleaned'
+
+    # Fill NaN values in text columns with empty strings
+    for df_name, df in [('df_train', df_train), ('df_val', df_val), ('df_test', df_test)]:
+        if TEXT_FEATURE_COL_BODY in df.columns:
+            df[TEXT_FEATURE_COL_BODY] = df[TEXT_FEATURE_COL_BODY].fillna('')
+
+        else:
+            print(f"Warning: Column '{TEXT_FEATURE_COL_BODY}' not found in {df_name}.")
+            # If critical, you might want to stop or handle this error more robustly
+
+        if TEXT_FEATURE_COL_SUBJECT in df.columns:
+            df[TEXT_FEATURE_COL_SUBJECT] = df[TEXT_FEATURE_COL_SUBJECT].fillna('')
+        # No warning if subject is missing, as body is primary
+
+    # Strategy for combining text features (concatenate subject and body)
+    # This was defined when creating the split DataFrames. If 'subject_cleaned' was included in X for splitting, it's here.
+
+    def combine_text_features_for_vectorization(row):
+        body = str(row.get(TEXT_FEATURE_COL_BODY, ""))
+        subject = str(row.get(TEXT_FEATURE_COL_SUBJECT, ""))
+
+        # Subject first
+        return subject + " " + body
+
+    # Check if subject column exists to decide on the feature column
+    if TEXT_FEATURE_COL_SUBJECT in df_train.columns:
+        print("Creating 'text_features_combined' by concatenating subject and body...")
+        df_train['text_features_combined'] = df_train.apply(combine_text_features_for_vectorization, axis=1)
+        df_val['text_features_combined'] = df_val.apply(combine_text_features_for_vectorization, axis=1)
+        df_test['text_features_combined'] = df_test.apply(combine_text_features_for_vectorization, axis=1)
+        FEATURE_TEXT_COLUMN = 'text_features_combined'
+
+    elif TEXT_FEATURE_COL_BODY in df_train.columns:
+        print(f"Using only '{TEXT_FEATURE_COL_BODY}' for feature engineering as subject column was not found or not consistently available.")
+        FEATURE_TEXT_COLUMN = TEXT_FEATURE_COL_BODY
+
+    else:
+        print(f"ERROR: Critical text column '{TEXT_FEATURE_COL_BODY}' is missing. Cannot proceed with feature engineering.")
+        # This state should ideally be caught earlier if df_train is empty or columns are wrong
+
+    if FEATURE_TEXT_COLUMN and FEATURE_TEXT_COLUMN in df_train.columns:
+        print(f"Final column to be used for TF-IDF: '{FEATURE_TEXT_COLUMN}'")
+        print("Sample of text to be vectorized (from training data, first 2 entries):")
+        print(df_train[FEATURE_TEXT_COLUMN].head(2).tolist())
+
+    elif FEATURE_TEXT_COLUMN is None:
+            print("Feature text column could not be determined.")
+
+X_train_tfidf = None
+X_val_tfidf = None
+X_test_tfidf = None
+
+# Renamed to avoid conflict with sklearn's TfidfVectorizer class
+tfidf_vectorizer_model = None
+
+if FEATURE_TEXT_COLUMN and \
+    'df_train' in globals() and not df_train.empty and FEATURE_TEXT_COLUMN in df_train.columns and \
+    'df_val' in globals() and not df_val.empty and FEATURE_TEXT_COLUMN in df_val.columns and \
+    'df_test' in globals() and not df_test.empty and FEATURE_TEXT_COLUMN in df_test.columns:
+
+    # Initialize TF-IDF Vectorizer
+    tfidf_vectorizer_model = TfidfVectorizer(
+        stop_words='english',
+        max_df=0.90,        # Ignore terms that appear in > 90% of documents (too common)
+        min_df=5,           # Ignore terms that appear in < 5 documents (too rare)
+        ngram_range=(1, 2), # Consider unigrams and bigrams
+        max_features=15000, # Limit vocabulary size (adjust based on performance/memory)
+        sublinear_tf=True   # Apply sublinear tf scaling (i.e., replace tf with 1 + log(tf))
+    )
+
+    print("Fitting TF-IDF Vectorizer on training data...")
+    start_time_tfidf_fit = time.time()
+    X_train_tfidf = tfidf_vectorizer_model.fit_transform(df_train[FEATURE_TEXT_COLUMN])
+    fit_duration = time.time() - start_time_tfidf_fit
+    print(f"TF-IDF fitting completed in {fit_duration:.2f} seconds.")
+
+    print("Transforming validation data...")
+    start_time_tfidf_transform_val = time.time()
+    X_val_tfidf = tfidf_vectorizer_model.transform(df_val[FEATURE_TEXT_COLUMN])
+    transform_val_duration = time.time() - start_time_tfidf_transform_val
+    print(f"Validation data transformation completed in {transform_val_duration:.2f} seconds.")
+
+    print("Transforming test data...")
+    start_time_tfidf_transform_test = time.time()
+    X_test_tfidf = tfidf_vectorizer_model.transform(df_test[FEATURE_TEXT_COLUMN])
+    transform_test_duration = time.time() - start_time_tfidf_transform_test
+    print(f"Test data transformation completed in {transform_test_duration:.2f} seconds.")
+
+    print(f"\nShape of TF-IDF features for training data: {X_train_tfidf.shape}")
+    print(f"Shape of TF-IDF features for validation data: {X_val_tfidf.shape}")
+    print(f"Shape of TF-IDF features for test data: {X_test_tfidf.shape}")
+
+    # Save the fitted TF-IDF vectorizer
+    try:
+        joblib.dump(tfidf_vectorizer_model, 'tfidf_vectorizer.joblib')
+        print("TF-IDF vectorizer saved to '/content/tfidf_vectorizer.joblib'")
+
+    except Exception as e:
+        print(f"Error saving TF-IDF vectorizer: {e}")
+
+else:
+    print("Cannot perform TF-IDF: Training data/validation/test data or the designated FEATURE_TEXT_COLUMN is missing or empty.")
+
+y_train = pd.Series(dtype='int')
+y_val = pd.Series(dtype='int')
+y_test = pd.Series(dtype='int')
+
+# Initialise final training features, might be updated by SMOTE
+X_train_final = X_train_tfidf
+
+# Initialise final training labels
+y_train_final = pd.Series(dtype='int')
+
+if 'df_train' in globals() and not df_train.empty and 'df_val' in globals() and not df_val.empty and 'df_test' in globals() and not df_test.empty and X_train_tfidf is not None:
+    y_train = df_train['label'].astype(int)
+    y_val = df_val['label'].astype(int)
+    y_test = df_test['label'].astype(int)
+
+    # Initialise before potential SMOTE
+    y_train_final = y_train.copy()
+
+    print("Original training label distribution:")
+    print(y_train.value_counts(normalize=True))
+    print(f"Original training feature shape: {X_train_tfidf.shape}")
+
+    # --- Optional: Apply SMOTE to the training data ---
+    # Given your dataset is already balanced (approx. 40k ham, 40k phish),
+    # SMOTE for *balancing* is not needed.
+    # You might consider it for *augmentation* if you wanted more synthetic phishing samples,
+    # but for now, let's keep it simple and set APPLY_SMOTE to False.
+
+    # Set to True only if you have a specific reason for augmentation
+    APPLY_SMOTE = False
+
+    if APPLY_SMOTE:
+        print("\nApplying SMOTE to training data (for augmentation)...")
+        try:
+            smote = SMOTE(random_state=42)
+
+            # Note: SMOTE expects numerical features. X_train_tfidf is already numerical (sparse matrix).
+            X_train_smote, y_train_smote = smote.fit_resample(X_train_tfidf, y_train)
+
+            X_train_final = X_train_smote
+
+            # Convert numpy array from SMOTE back to pandas Series
+            y_train_final = pd.Series(y_train_smote)
+
+            print("SMOTE applied. New training label distribution:")
+            print(y_train_final.value_counts(normalize=True))
+            print(f"Shape of training features after SMOTE: {X_train_final.shape}")
+
+        except ImportError:
+            print("imblearn.over_sampling.SMOTE not found. Skipping SMOTE. Install with: !pip install imbalanced-learn")
+
+            # Fallback to original
+            X_train_final = X_train_tfidf
+
+            # Fallback to original
+            y_train_final = y_train
+
+        except Exception as e:
+            print(f"Error during SMOTE: {e}. Using original training data.")
+
+            # Fallback
+            X_train_final = X_train_tfidf
+
+            # Fallback
+            y_train_final = y_train
+
+    else:
+        print("SMOTE not applied (dataset is balanced or APPLY_SMOTE=False). Using original training data for X_train_final, y_train_final.")
+        X_train_final = X_train_tfidf
+
+        # Already a pandas Series
+        y_train_final = y_train
+
+else:
+    print("Cannot prepare labels or apply SMOTE: Prerequisite data (df_train, X_train_tfidf, etc.) not available or empty.")
+
+# Ensure all necessary variables are defined and not None/empty
+save_successful = True
+if 'X_train_final' in globals() and X_train_final is not None and \
+    'y_train_final' in globals() and not y_train_final.empty and \
+    'X_val_tfidf' in globals() and X_val_tfidf is not None and \
+    'y_val' in globals() and not y_val.empty and \
+    'X_test_tfidf' in globals() and X_test_tfidf is not None and \
+    'y_test' in globals() and not y_test.empty:
+
+    try:
+        print("Saving TF-IDF features (sparse matrices)...")
+        save_npz('X_train_features.npz', X_train_final)
+        save_npz('X_val_features.npz', X_val_tfidf)
+        save_npz('X_test_features.npz', X_test_tfidf)
+        print("TF-IDF features saved as .npz files in /content/")
+
+        print("\nSaving labels...")
+        y_train_final.to_csv('y_train_labels.csv', index=False, header=['label'])
+        y_val.to_csv('y_val_labels.csv', index=False, header=['label'])
+        y_test.to_csv('y_test_labels.csv', index=False, header=['label'])
+        print("Labels saved as .csv files in /content/")
+
+    except Exception as e:
+        print(f"Error saving features/labels: {e}")
+        save_successful = False
+
+else:
+    print("One or more feature sets (X_train_final, X_val_tfidf, X_test_tfidf) or label sets (y_train_final, y_val, y_test) are missing or empty. Nothing saved.")
+    save_successful = False
+
+if save_successful:
+    print("\nFeature engineering complete. Output files are ready for model training.")
+
+else:
+    print("\nFeature engineering encountered issues. Not all files may have been saved.")
+\end{ffcode}
