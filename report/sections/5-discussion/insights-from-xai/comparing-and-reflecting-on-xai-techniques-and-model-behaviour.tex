@@ -1,4 +1,17 @@
 % ai-phishing-detection-dissertation/report/section/5-discussion/xai-insights/comparing-and-reflecting-on-xai-techniques-and-model-behaviour.tex
 
 \subsubsection*{Comparing and reflecting on XAI techniques and model behaviour}
+From analysing the XAI explanations, it can be said that:
 
+\begin{itemize}
+  \item The Random Forest model, using SHAP, shows a clear view of which specific TF-IDF features contributed most to individual email instances. This is critical for understanding the model on a feature engineering level.
+  \item With DistilBERT, using LIME, it provided a more semantic understanding of its local explanations, by directly acknowledging the specific words. This is more helpful for users to understand why and what parts of text was predicted to the relevant class.
+\end{itemize}
+
+\noindent When it comes to the generalisation challenges observed earlier, both models performed poorly on all the external, independent test sets. Now whilst XAI was applied mainly to email instances on the internal test set, applying the same techniques to instances across the external data sources would potentially give insight into the decision making processes that led to incorrect results. This would reveal the following:
+
+\begin{itemize}
+  \item Patterns that the models were trained on, from the training distribution, aren't present in the external emails.
+  \item For Random Forest, the key vocabulary from the "\textit{TfidfVectorizer}" was lacking in external phishing emails.
+  \item For DistilBERT, the fine-tuning process was conducted on the training distribution, making it possibly quite sensitive to language structures and semantics attributed to the Enron/CEAS training set.
+\end{itemize}
