@@ -1,0 +1,399 @@
+\subsubsection*{03\_nigerian\_fraud\_eda\_preprocess.ipynb}
+
+\begin{ffcode}
+print("Loading libraries...")
+
+# Core libraries
+import os
+import pandas as pd
+import numpy as np
+import re # For regular expressions
+import time # To time operations
+
+import kagglehub
+
+# Email parsing (might be needed if emails are in raw format)
+import email
+from email import policy
+from email.parser import BytesParser, Parser
+from email.utils import parsedate_to_datetime, getaddresses
+
+# HTML processing (if applicable)
+from bs4 import BeautifulSoup
+
+# Text processing
+import unicodedata
+
+# Visualization (optional)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+pd.set_option('display.max_colwidth', 150)
+pd.set_option('display.max_columns', 50)
+
+print("Libraries imported.\n")
+
+# This will be the path to the single text file containing all fraud emails
+FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH = None
+
+try:
+    print("Downloading/accessing 'rtatman/fraudulent-email-corpus' via kagglehub...")
+    fraud_dataset_base_path = kagglehub.dataset_download("rtatman/fraudulent-email-corpus")
+    print(f"Dataset downloaded/cached by kagglehub at: {fraud_dataset_base_path}")
+
+    # --- List contents of the downloaded path to find the data file ---
+    print(f"\n--- Contents of '{fraud_dataset_base_path}': ---")
+    found_text_file = False
+
+    if os.path.exists(fraud_dataset_base_path) and os.path.isdir(fraud_dataset_base_path):
+
+        for item in os.listdir(fraud_dataset_base_path):
+            print(item)
+
+            # The Kaggle dataset page for "rtatman/fraudulent-email-corpus"
+            # typically has one primary text file. We need to identify its name.
+            # It's often named something like 'fradulent_emails.txt', 'corpus.txt', etc.
+            # Or it might be the only .txt file.
+
+            if item.lower().endswith('.txt'): # A common assumption for such files
+                FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH = os.path.join(fraud_dataset_base_path, item)
+                print(f"Identified potential data file: {FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH}")
+                found_text_file = True
+                break # Assuming there's only one main text file. If multiple, adjust logic.
+
+        if not found_text_file:
+            print(f"ERROR: No .txt file found directly in '{fraud_dataset_base_path}'.")
+            print("Please inspect the contents manually and update the logic to find the correct data file.")
+
+    else:
+        print(f"ERROR: The path '{fraud_dataset_base_path}' reported by kagglehub does not exist or is not a directory.")
+
+    print("--- End of directory contents ---\n")
+
+    if FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH and os.path.exists(FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH):
+        print(f"Successfully located the fraud corpus text file: {FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH}")
+        # We won't load the full content into a DataFrame here yet,
+        # just confirm we can access it.
+        # The next step will be to read and split this file.
+    elif FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH is None and found_text_file is False:
+         print("Could not automatically identify the .txt data file in the downloaded dataset.")
+
+    else:
+        print(f"ERROR: Identified path {FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH} does not seem to exist.")
+
+
+except Exception as e:
+    print(f"An error occurred during dataset download or path setup: {e}")
+    print("Ensure kagglehub is installed and Kaggle API credentials configured if needed.")
+
+# Initialise
+all_fraud_email_strings = []
+    
+    if FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH and os.path.exists(FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH):
+        print(f"Reading content from: {FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH}")
+    
+        try:
+            with open(FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH, 'r', encoding='latin-1', errors='ignore') as f:
+                full_text_content = f.read()
+    
+            print(f"Successfully read {len(full_text_content)} characters.")
+    
+            # Splitting logic (using the 'From ' heuristic as a starting point)
+            # You MUST inspect your actual text file to see if this is the correct delimiter.
+            # It's common for mbox-style concatenated email files.
+            raw_messages_split = full_text_content.split('\nFrom ') # Split by newline then "From "
+    
+            if len(raw_messages_split) > 1:
+                # The first element might not start with "From " if the file doesn't begin with it.
+                # The subsequent elements need "From " prepended.
+                all_fraud_email_strings.append(raw_messages_split[0]) # Add the first part as is
+    
+                for i in range(1, len(raw_messages_split)):
+                    all_fraud_email_strings.append("From " + raw_messages_split[i]) # Add back "From "
+    
+                # If the very first element was not actually an email (e.g. some file header)
+                # and does not start with "From ", you might want to remove it after inspection.
+                # For now, we keep it.
+                print(f"Split into approximately {len(all_fraud_email_strings)} email strings based on '\nFrom ' delimiter.")
+    
+                if all_fraud_email_strings:
+                    print(f"First few chars of first extracted string: {all_fraud_email_strings[0][:300]}")
+    
+                    if len(all_fraud_email_strings) > 1:
+                         print(f"First few chars of second extracted string: {all_fraud_email_strings[1][:300]}")
+    
+            elif full_text_content.strip(): # If split didn't work, treat as one message (unlikely for this dataset)
+                all_fraud_email_strings = [full_text_content]
+                print("Warning: Could not split by '\nFrom '. Treating entire file as one message string (or split failed).")
+    
+            else:
+                print("File was empty or split resulted in no messages.")
+    
+        except Exception as e:
+            print(f"Error reading or splitting the fraud corpus file: {e}")
+    
+    else:
+        print("FRAUD_CORPUS_SINGLE_TEXT_FILE_PATH is not set or file does not exist. Cannot read and split.")
+
+def get_email_body_and_urls(message_obj):
+"""
+Extracts text body and URLs from an email.Message object.
+Tries plain text first, then HTML. Extracts hrefs from  tags in HTML.
+"""
+
+body_text = ""
+html_body_text = ""
+urls_in_html = []
+
+if message_obj is None: return "", []
+
+if message_obj.is_multipart():
+
+    for part in message_obj.walk():
+        content_type = part.get_content_type(); content_disposition = str(part.get_content_disposition())
+
+        if "attachment" not in content_disposition:
+
+            if content_type == "text/plain" and not body_text:
+
+                try:
+                    payload = part.get_payload(decode=True); charset = part.get_content_charset() or 'utf-8'; body_text = payload.decode(charset, errors='replace')
+
+                except Exception: pass
+
+            elif content_type == "text/html" and not html_body_text:
+
+                try:
+                    payload = part.get_payload(decode=True); charset = part.get_content_charset() or 'utf-8'; html_content = payload.decode(charset, errors='replace'); html_body_text = html_content
+                    soup_part = BeautifulSoup(html_content, 'html.parser')
+                    for link_tag in soup_part.find_all('a', href=True): urls_in_html.append(link_tag['href'])
+
+                except Exception: pass
+
+# Not multipart
+else:
+    content_type = message_obj.get_content_type()
+
+    try:
+        payload = message_obj.get_payload(decode=True)
+        charset = message_obj.get_content_charset() or 'utf-8'
+
+        if content_type == "text/plain":
+            body_text = payload.decode(charset, errors='replace')
+
+        elif content_type == "text/html":
+            html_body_text = payload.decode(charset, errors='replace')
+            soup_part = BeautifulSoup(html_body_text, 'html.parser')
+
+            for link_tag in soup_part.find_all('a', href=True):
+                urls_in_html.append(link_tag['href'])
+
+    except Exception: pass
+
+# Logic to decide final body: prefer plain. If not, clean HTML.
+final_body = ""
+if body_text.strip():
+    final_body = body_text
+
+elif html_body_text.strip():
+    soup = BeautifulSoup(html_body_text, 'html.parser')
+
+    # Extract text, trying to preserve some structure with spaces
+    # Remove script and style elements
+    for script_or_style in soup(["script", "style"]):
+        script_or_style.decompose()
+
+    final_body = soup.get_text(separator=' ', strip=True)
+
+# Unique URLs
+return final_body, list(set(urls_in_html))
+
+def clean_text_content_minimal(text):
+if not isinstance(text, str):
+return ""
+
+# NFKC normalization is generally safe and good for consistency
+text = unicodedata.normalize('NFKC', text)
+
+# Lowercasing can be debated for preserving emphasis, but often done for consistency
+text = text.lower()
+
+# Replace multiple whitespaces with a single space
+text = re.sub(r'\s+', ' ', text)
+
+# For Nigerian fraud, we want to be *less* aggressive with removing punctuation or special characters
+# as they might be part of the "style" or contain pseudo-official looking marks.
+# We might still remove non-ASCII if they are causing encoding issues and not part of the message intent.
+# text = re.sub(r'[^\x00-\x7F]+', ' ', text) # Optional: remove non-ASCII
+# Avoid aggressive removal of punctuation that might be used for emphasis or specific phrasing.
+
+# For now, just strip leading/trailing whitespace.
+text = text.strip()
+
+return text
+
+def extract_email_headers(message_obj):
+headers = {}
+
+if message_obj is None:
+    return {'subject': '',
+            'from_address': '',
+            'to_address': '',
+            'date_time': pd.NaT,
+            'message_id': ''
+    }
+
+try:
+    # Ensure it's a string
+    headers['subject'] = str(message_obj.get('Subject', ''))
+
+    from_addrs = getaddresses(message_obj.get_all('From', []))
+    headers['from_address'] = ', '.join([addr for name, addr in from_addrs if addr])
+
+    to_addrs = getaddresses(message_obj.get_all('To', []))
+    headers['to_address'] = ', '.join([addr for name, addr in to_addrs if addr])
+
+    date_str = message_obj.get('Date', '')
+    headers['date_time'] = pd.to_datetime(parsedate_to_datetime(date_str), errors='coerce') if date_str else pd.NaT
+
+    headers['message_id'] = str(message_obj.get('Message-ID', ''))
+
+except Exception:
+    headers.setdefault('subject', '')
+    headers.setdefault('from_address', '')
+    headers.setdefault('to_address', '')
+    headers.setdefault('date_time', pd.NaT)
+    headers.setdefault('message_id', '')
+
+return headers
+
+def parse_fraud_email_string(email_raw_string, original_identifier="N/A"):
+"""Parses an email from its raw string content, applying minimal cleaning."""
+
+if not isinstance(email_raw_string, str) or not email_raw_string.strip():
+    print(f"Warning: Empty or invalid email string for {original_identifier}")
+    return None
+
+try:
+    # Use email.parser.Parser for string inputs
+    message_obj = Parser(policy=policy.default).parsestr(email_raw_string)
+
+except Exception as e:
+    print(f"Warning: Could not parse email string for {original_identifier}: {e}")
+    return None
+
+if message_obj is None:
+    return None
+
+headers = extract_email_headers(message_obj)
+body_content, urls = get_email_body_and_urls(message_obj) # body_content is relatively raw here
+
+return {
+    'original_identifier': original_identifier,
+    'message_id': headers['message_id'],
+    'date_time': headers['date_time'],
+    'from_address': headers['from_address'],
+    'to_address': headers['to_address'],
+    'subject_original': headers['subject'], # Keep original for inspection
+    'subject_cleaned_minimal': clean_text_content_minimal(headers['subject']),
+    'body_cleaned_minimal': clean_text_content_minimal(body_content), # Apply minimal cleaning
+    'urls_in_email': urls,
+    'body_length': len(body_content), # Length of body before minimal cleaning
+    'num_urls': len(urls)
+}
+
+df_processed_nigerian_fraud = pd.DataFrame()
+processed_fraud_emails_list = []
+
+# Ensure all_fraud_email_strings is defined and populated from Section 2.1
+if 'all_fraud_email_strings' in globals() and all_fraud_email_strings:
+    print(f"Applying parsing and minimal cleaning to {len(all_fraud_email_strings)} fraud email strings...")
+    start_time = time.time()
+
+    for i, email_str_content in enumerate(all_fraud_email_strings):
+
+        # Using index as an identifier for now, or use Message-ID if reliably parsed
+        parsed_data = parse_fraud_email_string(email_str_content, original_identifier=f"fraud_email_{i+1}")
+
+        if parsed_data:
+            processed_fraud_emails_list.append(parsed_data)
+
+        # Progress every 10%
+        if (i + 1) % (max(1, len(all_fraud_email_strings) // 10)) == 0:
+            print(f"  Processed {i + 1}/{len(all_fraud_email_strings)} email strings...")
+
+    df_processed_nigerian_fraud = pd.DataFrame(processed_fraud_emails_list)
+    end_time = time.time()
+
+    if not df_processed_nigerian_fraud.empty:
+        print(f"\nSuccessfully processed {len(df_processed_nigerian_fraud)} Nigerian Fraud emails in {end_time - start_time:.2f} seconds.")
+        print("Processed Nigerian Fraud head:")
+        print(df_processed_nigerian_fraud.head())
+        print("\nProcessed Nigerian Fraud info:")
+        df_processed_nigerian_fraud.info()
+
+    else:
+        print("No Nigerian Fraud emails were successfully processed. Check the input strings or parsing logic.")
+
+else:
+    print("Variable 'all_fraud_email_strings' not found or is empty.")
+
+if not df_processed_nigerian_fraud.empty:
+    print("--- Nigerian Fraud Data Info ---")
+    df_processed_nigerian_fraud.info(show_counts=True)
+    print(f"\nMissing values in processed data:\n{df_processed_nigerian_fraud.isnull().sum()}")
+    print("\n--- Example Email Content (Minimally Cleaned, first 300 chars) ---")
+
+    for content in df_processed_nigerian_fraud['body_cleaned_minimal'].sample(min(3, len(df_processed_nigerian_fraud))):
+        # Print first 300 chars
+        print(content[:300])
+        print("-" * 30)
+
+else:
+    print("Processed Nigerian Fraud DataFrame is empty. Skipping EDA.")
+
+if not df_processed_nigerian_fraud.empty:
+    # 1 for phishing/fraud
+    df_processed_nigerian_fraud['label'] = 1
+    print("Added 'label' column (all 1s for phishing/fraud).")
+    print(df_processed_nigerian_fraud[['body_cleaned_minimal', 'label']].head())
+
+else:
+    print("Processed Nigerian Fraud DataFrame is empty. Skipping labeling.")
+
+if not df_processed_nigerian_fraud.empty:
+    print("--- Basic Stats of Processed Nigerian Fraud Data ---")
+
+    # 'body_length' was from original body, let's add length of minimally cleaned body
+    df_processed_nigerian_fraud['body_cleaned_length'] = df_processed_nigerian_fraud['body_cleaned_minimal'].apply(len)
+    print(df_processed_nigerian_fraud[['body_length', 'body_cleaned_length', 'num_urls']].describe())
+
+    plt.figure(figsize=(10, 6))
+    sns.histplot(df_processed_nigerian_fraud['body_cleaned_length'], bins=50, kde=False)
+    plt.title('Distribution of Email Body Lengths (Nigerian Fraud - Minimally Cleaned)')
+    plt.xlabel('Body Length (characters)')
+    plt.ylabel('Frequency')
+    plt.show()
+
+    print("\n--- Sample Subjects (Minimally Cleaned) ---")
+
+    for text in df_processed_nigerian_fraud['subject_cleaned_minimal'].sample(min(5, len(df_processed_nigerian_fraud))):
+        print(text[:150]) # Print first 150 chars of subject
+
+else:
+    print("Processed Nigerian Fraud DataFrame is empty. Skipping further EDA.")
+
+if not df_processed_nigerian_fraud.empty:
+    OUTPUT_FILENAME_NIGERIAN = f'nigerian_fraud_test_processed_{len(df_processed_nigerian_fraud)}.csv'
+    # Saves to /content/ in Colab if just filename is given
+
+    try:
+        df_processed_nigerian_fraud.to_csv(OUTPUT_FILENAME_NIGERIAN, index=False)
+        print(f"Processed Nigerian Fraud test data saved to Colab runtime at: /content/{OUTPUT_FILENAME_NIGERIAN}")
+
+    except Exception as e:
+        print(f"Error saving processed Nigerian Fraud data: {e}")
+
+else:
+    print("Processed Nigerian Fraud DataFrame is empty. Nothing to save.")
+\end{ffcode}

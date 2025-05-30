@@ -1,0 +1,272 @@
+\subsubsection*{04\_ceas\_csv\_eda\_preprocess.ipynb}
+
+\begin{ffcode}
+print("Loading libraries...")
+
+# Core libraries
+import os
+import pandas as pd
+import numpy as np
+import re # For regular expressions
+import time # To time operations
+import gdown
+
+import kagglehub
+
+# Email parsing
+import email
+from email import policy
+from email.parser import BytesParser, Parser
+from email.utils import parsedate_to_datetime, getaddresses
+
+# HTML processing
+from bs4 import BeautifulSoup
+
+# Text processing
+import unicodedata
+
+# Visualization
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+pd.set_option('display.max_colwidth', 150)
+pd.set_option('display.max_columns', 50)
+
+print("Libraries imported.\n")
+
+CEAS_CSV_GDRIVE_FILE_ID = '1SEzMyobVD612wgK5Qj95NDNBiTJw2j4A'
+CEAS_CSV_LOCAL_FILENAME = 'CEAS_08.csv'
+gdrive_url_ceas_csv = f'https://drive.google.com/uc?id={CEAS_CSV_GDRIVE_FILE_ID}'
+
+if not os.path.exists(CEAS_CSV_LOCAL_FILENAME):
+    print(f"Downloading {CEAS_CSV_LOCAL_FILENAME} from Google Drive...")
+
+    try:
+        gdown.download(gdrive_url_ceas_csv, CEAS_CSV_LOCAL_FILENAME, quiet=False)
+        print(f"{CEAS_CSV_LOCAL_FILENAME} downloaded successfully.")
+
+    except Exception as e:
+        print(f"ERROR downloading {CEAS_CSV_LOCAL_FILENAME}: {e}. Check File ID and share settings.")
+        # Handle error, perhaps by stopping or ensuring df_ceas_raw remains empty
+
+else:
+    print(f"{CEAS_CSV_LOCAL_FILENAME} already exists in Colab runtime.")
+
+CEAS_CSV_INPUT_PATH = CEAS_CSV_LOCAL_FILENAME # Use the downloaded/local file
+df_ceas_raw = pd.DataFrame()
+
+if os.path.exists(CEAS_CSV_INPUT_PATH):
+    try:
+        df_ceas_raw = pd.read_csv(CEAS_CSV_INPUT_PATH)
+        print(f"Successfully loaded {CEAS_CSV_INPUT_PATH}. Shape: {df_ceas_raw.shape}")
+
+        # Immediately print head and info to start your EDA
+        print("\nRaw CEAS CSV head:")
+        print(df_ceas_raw.head())
+        print("\nRaw CEAS CSV info:")
+        df_ceas_raw.info(show_counts=True)
+
+    except Exception as e:
+        print(f"Error loading CEAS_08.csv: {e}")
+
+else:
+    print(f"ERROR: {CEAS_CSV_INPUT_PATH} not found after download attempt.")
+
+if not df_ceas_raw.empty:
+    print("--- Column Names Confirmed ---")
+    print(df_ceas_raw.columns.tolist())
+
+    # Based on your examination:
+    TEXT_COLUMN_NAME_CEAS = 'body'
+    LABEL_COLUMN_NAME_CEAS = 'label'
+    SUBJECT_COLUMN_NAME_CEAS = 'subject'
+    # Other columns identified: 'sender', 'receiver', 'date', 'urls' (binary indicator)
+
+    print(f"\nUsing text column: '{TEXT_COLUMN_NAME_CEAS}'")
+    print(f"Using label column: '{LABEL_COLUMN_NAME_CEAS}'")
+    print(f"Using subject column: '{SUBJECT_COLUMN_NAME_CEAS}'")
+
+    print(f"\n--- Missing Values per Column ---")
+    print(df_ceas_raw.isnull().sum())
+
+    # Drop rows where essential columns (body, label, subject) are missing
+    # (sender, receiver, date, urls_indicator might be allowed to have NaNs if not primary features)
+    essential_cols = [TEXT_COLUMN_NAME_CEAS, LABEL_COLUMN_NAME_CEAS, SUBJECT_COLUMN_NAME_CEAS]
+    df_ceas_raw.dropna(subset=essential_cols, inplace=True)
+    print(f"\nShape after dropping NaNs in essential columns: {df_ceas_raw.shape}")
+
+
+    print(f"\n--- Value Counts for Label Column ('{LABEL_COLUMN_NAME_CEAS}') ---")
+    print(df_ceas_raw[LABEL_COLUMN_NAME_CEAS].value_counts(dropna=False))
+
+    print(f"\n--- Value Counts for URLs presence indicator column ('urls') ---")
+
+    # Check if 'urls' column exists
+    if 'urls' in df_ceas_raw.columns:
+        print(df_ceas_raw['urls'].value_counts(dropna=False))
+
+    else:
+        print("'urls' column not found in the CSV.")
+
+    print(f"\n--- Example Text from Body Column ('{TEXT_COLUMN_NAME_CEAS}') (first 300 chars) ---")
+
+    if not df_ceas_raw[TEXT_COLUMN_NAME_CEAS].empty:
+        for content in df_ceas_raw[TEXT_COLUMN_NAME_CEAS].sample(min(3, len(df_ceas_raw))).astype(str):
+            print(content[:300])
+            print("-" * 30)
+
+    else:
+        print(f"No non-missing values found in the text column '{TEXT_COLUMN_NAME_CEAS}' for sampling.")
+
+    print(f"\n--- Example Subjects from Subject Column ('{SUBJECT_COLUMN_NAME_CEAS}') ---")
+
+    if not df_ceas_raw[SUBJECT_COLUMN_NAME_CEAS].empty:
+        for content in df_ceas_raw[SUBJECT_COLUMN_NAME_CEAS].sample(min(3, len(df_ceas_raw))).astype(str):
+            print(content)
+            print("-" * 30)
+
+    else:
+        print(f"No non-missing values found in the subject column '{SUBJECT_COLUMN_NAME_CEAS}' for sampling.")
+
+else:
+    print("Raw CEAS DataFrame is empty. Skipping EDA.")
+
+def clean_text_content(text):
+    if not isinstance(text, str):
+        return ""
+
+    # Step 1: Basic HTML Tag Removal (if CSV text column contains HTML)
+    if bool(BeautifulSoup(text, "html.parser").find()):
+        soup = BeautifulSoup(text, 'html.parser')
+
+        for script_or_style in soup(["script", "style"]):
+            script_or_style.decompose()
+
+        text = soup.get_text(separator=' ', strip=True)
+
+    # Step 2: Text Normalization and Cleaning
+    text = unicodedata.normalize('NFKC', text)
+    text = text.lower()
+
+    # Remove URLs and email addresses before other punctuation if they are noisy
+    text = re.sub(r'http\S+|www\S+|https\S+', ' ', text, flags=re.MULTILINE)
+    text = re.sub(r'\S+@\S+', ' ', text)
+
+    # Keep basic punctuation, replace other non-alphanumeric with space
+    text = re.sub(r"[^a-zA-Z0-9\s.,!?'\"$%()]", ' ', text)
+
+    # Consolidate multiple spaces
+    text = re.sub(r'\s+', ' ', text)
+
+    # Strip text
+    text = text.strip()
+
+    return text
+
+df_processed_ceas = pd.DataFrame()
+
+# Using the column names identified in Section 3
+TEXT_COL = 'body'
+LABEL_COL = 'label'
+SUBJECT_COL = 'subject'
+
+if not df_ceas_raw.empty and \
+   TEXT_COL in df_ceas_raw.columns and \
+   LABEL_COL in df_ceas_raw.columns and \
+   SUBJECT_COL in df_ceas_raw.columns:
+
+    print(f"Processing CEAS data using text column: '{TEXT_COL}', subject: '{SUBJECT_COL}', and label: '{LABEL_COL}'...")
+
+    # Select relevant columns and create a working copy
+    # Include other columns like 'sender', 'receiver', 'date', 'urls' if you plan to use them as features later
+    relevant_cols = [TEXT_COL, SUBJECT_COL, LABEL_COL, 'sender', 'receiver', 'date', 'urls']
+    # Filter out columns that might not exist if the user's CSV is slightly different
+
+    existing_relevant_cols = [col for col in relevant_cols if col in df_ceas_raw.columns]
+    df_temp_ceas = df_ceas_raw[existing_relevant_cols].copy()
+
+    # Ensure label is integer
+    df_temp_ceas[LABEL_COL] = df_temp_ceas[LABEL_COL].astype(int)
+
+    # Clean the text columns
+    print(f"Cleaning text in '{TEXT_COL}'...")
+    start_time = time.time()
+    df_temp_ceas['body_cleaned'] = df_temp_ceas[TEXT_COL].astype(str).apply(clean_text_content)
+
+    print(f"Cleaning text in '{SUBJECT_COL}'...")
+    df_temp_ceas['subject_cleaned'] = df_temp_ceas[SUBJECT_COL].astype(str).apply(clean_text_content)
+    end_time = time.time()
+    print(f"Text cleaning took {end_time - start_time:.2f} seconds.")
+
+    # Select final columns for the processed dataframe
+    # You can add more original columns if they are useful for later feature engineering
+    cols_to_keep = ['body_cleaned', 'subject_cleaned', 'label']
+
+    # Add back other potentially useful raw columns if they exist
+    if 'sender' in df_temp_ceas.columns: cols_to_keep.append('sender')
+    if 'receiver' in df_temp_ceas.columns: cols_to_keep.append('receiver')
+    if 'date' in df_temp_ceas.columns: cols_to_keep.append('date') # Original date string
+    if 'urls' in df_temp_ceas.columns: cols_to_keep.append('urls') # Original binary urls indicator
+
+    df_processed_ceas = df_temp_ceas[cols_to_keep].copy()
+
+    print(f"\nProcessed {len(df_processed_ceas)} emails from CEAS.")
+    print("Processed CEAS head:")
+    print(df_processed_ceas.head())
+    print("\nLabel distribution in processed CEAS data:")
+    print(df_processed_ceas['label'].value_counts(dropna=False)) # Should be 0s and 1s
+
+else:
+    print("Raw CEAS DataFrame is empty or essential columns ('body', 'label', 'subject') not identified correctly. Skipping preprocessing.")
+
+if not df_processed_ceas.empty:
+    df_processed_ceas['body_cleaned_length'] = df_processed_ceas['body_cleaned'].apply(len)
+    df_processed_ceas['subject_cleaned_length'] = df_processed_ceas['subject_cleaned'].apply(len)
+
+    print("--- Descriptive Stats for Processed CEAS (lengths) ---")
+    print(df_processed_ceas[['body_cleaned_length', 'subject_cleaned_length']].describe())
+
+    print("\n--- Stats by Label ---")
+    print(df_processed_ceas.groupby('label')[['body_cleaned_length', 'subject_cleaned_length']].mean())
+
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1, 2, 1)
+    sns.histplot(data=df_processed_ceas, x='body_cleaned_length', hue='label', bins=50, kde=False, multiple="dodge")
+    plt.title('Body Length Distribution by Label')
+
+    plt.subplot(1, 2, 2)
+    sns.histplot(data=df_processed_ceas, x='subject_cleaned_length', hue='label', bins=30, kde=False, multiple="dodge")
+    plt.title('Subject Length Distribution by Label')
+    plt.tight_layout()
+    plt.show()
+
+else:
+    print("Processed CEAS DataFrame is empty.")
+
+if not df_processed_ceas.empty:
+
+    # Save phishing emails (label 1) from CEAS for training combination
+    df_ceas_phishing_for_training = df_processed_ceas[df_processed_ceas['label'] == 1].copy()
+
+    if not df_ceas_phishing_for_training.empty:
+        OUTPUT_FILENAME_CEAS_PHISHING = f'ceas08_phishing_for_training_{len(df_ceas_phishing_for_training)}.csv'
+        df_ceas_phishing_for_training.to_csv(OUTPUT_FILENAME_CEAS_PHISHING, index=False)
+        print(f"Processed CEAS (phishing for training) data saved to: /content/{OUTPUT_FILENAME_CEAS_PHISHING}")
+
+    else:
+        print("No phishing (label 1) emails found in processed CEAS to save for training.")
+
+    # Optionally, save ham emails (label 0) from CEAS as an additional ham test set
+    df_ceas_ham_for_testing = df_processed_ceas[df_processed_ceas['label'] == 0].copy()
+
+    if not df_ceas_ham_for_testing.empty:
+        OUTPUT_FILENAME_CEAS_HAM = f'ceas08_ham_for_testing_{len(df_ceas_ham_for_testing)}.csv'
+        df_ceas_ham_for_testing.to_csv(OUTPUT_FILENAME_CEAS_HAM, index=False)
+        print(f"Processed CEAS (ham for testing) data saved to: /content/{OUTPUT_FILENAME_CEAS_HAM}")
+
+    else:
+        print("No ham (label 0) emails found in processed CEAS to save for testing.")
+
+else:
+    print("Processed CEAS DataFrame is empty. Nothing to save.")
+\end{ffcode}
