@@ -2,3 +2,21 @@
 
 \subsubsection*{Achievement of project objectives}
 
+\begin{enumerate}
+  \item \uline{\textbf{OBJECTIVE 1}}: "\textit{Conduct a comprehensive review of existing AI phishing detection models}"
+  \begin{itemize}
+    \item This was achieved in \hyperref[sec:2-literature-review]{\uline{\textbf{Section 2}}}, that identified research gaps, AI models, and XAI techniques.
+  \end{itemize}
+  \item \uline{\textbf{OBJECTIVE 2}}: "\textit{Identify and implement suitable XAI techniques (e.g., SHAP, LIME)}"
+  \begin{itemize}
+    \item This was fulfilled via implementation of a Random Forest and DistilBERT model, integrating SHAP and LIME respectively. The results of these are presented in \hyperref[sec:4-results]{\uline{\textbf{Section 4}}}.
+  \end{itemize}
+  \item \uline{\textbf{OBJECTIVE 3}}: "\textit{Evaluate the system's performance in terms of accuracy and interpretability}"
+  \begin{itemize}
+    \item The performance of the models were evaluated empirically via metrics such as accuracy, recall, precision, and ROC AUC on both internal (in distribution data) and external test sets, presented in \hyperref[sec:4-results]{\uline{\textbf{Section 4}}}. Interpretability was measured through qualitative, informal user feedback, detailed in \hyperref[sec:4-results]{\uline{\textbf{Section 4}}}.
+  \end{itemize}
+  \item \uline{\textbf{OBJECTIVE 4}}: "\textit{Compare the usability of the XAI phishing detection model with traditional black-boxed models}"
+  \begin{itemize}
+    \item A user study against a traditional "black-boxed" model was not explicitly performed, since the whole aim of XAI is to mitigate such behaviour. However, analysing the SHAP and LIME explanations, along with the user feedback, gave insights into the benefits of such explanations over opaque classification outcomes. Furthermore on the performance comparison, in this study as observed, XAI techniques were applied post-hoc so therefore they didn't impact the accuracy scores whatsoever.
+  \end{itemize}
+\end{enumerate}
